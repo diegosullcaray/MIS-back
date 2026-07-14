@@ -1,0 +1,25 @@
+# ── Perfil PROD: auth por cuenta corporativa de Google (Gmail) ──────────────
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+mis:
+  auth:
+    otp:
+      fixed-code: ""          # OTP aleatorio + envío por correo corporativo
+    gmail:
+      dominio-corporativo: ${MIS_GMAIL_DOMINIO:confianza.pe}
+      client-id: ${MIS_GMAIL_CLIENT_ID:}
+
+# Swagger deshabilitado en prod
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+logging:
+  level:
+    pe.confianza.mis: INFO

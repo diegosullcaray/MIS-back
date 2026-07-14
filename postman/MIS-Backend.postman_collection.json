@@ -1,0 +1,418 @@
+{
+  "info": {
+    "name": "MIS Host · Backend",
+    "description": "Colección de endpoints REST de mis-backend (Spring Boot). Módulos: auth, usuarios, roles, sistemas.\n\nFlujo de autenticación:\n1. Ejecutar \"Auth > Login\" con email/password → devuelve mfaToken (se guarda automático en {{mfaToken}}).\n2. Ejecutar \"Auth > Verificar OTP\" (en dev el OTP fijo es 123456, configurado en application-dev.yml) → devuelve el JWT (se guarda automático en {{token}}).\n3. El resto de requests usan Bearer {{token}} automáticamente (auth heredado de la colección).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "mis-backend-collection"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "mfaToken", "value": "", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "usuarioId", "value": "", "type": "string" },
+    { "key": "rolId", "value": "", "type": "string" },
+    { "key": "sistemaId", "value": "", "type": "string" },
+    { "key": "sistemaSlug", "value": "subsistema-contabilidad", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (paso 1: credenciales)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@confianza.pe\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "auth", "login" ]
+            },
+            "description": "password = contraseña en dev, o ID token de Google en prod. Responde MfaChallengeResponse { mfaRequerido, mfaToken, email }.\n\nUsuarios semilla de dev (V3__seed_dev.sql):\n- admin@confianza.pe / admin123 (admin-sistema)\n- general@confianza.pe / general123 (admin-general)\n- supervisor@confianza.pe / supervisor123 (supervisor-area)"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.mfaToken) pm.collectionVariables.set('mfaToken', body.mfaToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Verificar OTP (paso 2: token de sesión)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mfaToken\": \"{{mfaToken}}\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/verificar-otp",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "auth", "verificar-otp" ]
+            },
+            "description": "En dev el OTP fijo es 123456 (mis.auth.otp.fixed-code en application-dev.yml). Responde LoginResponse { token, usuario }."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.token) pm.collectionVariables.set('token', body.token);",
+                  "    if (body.usuario && body.usuario.id) pm.collectionVariables.set('usuarioId', body.usuario.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "description": "Todos requieren rol ADMIN_SISTEMA (Bearer {{token}}).",
+      "item": [
+        {
+          "name": "Listar usuarios (paginado)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios?page=1&pageSize=20&q=&activo=",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "usuarios" ],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" },
+                { "key": "q", "value": "", "description": "búsqueda por nombre/email (opcional)" },
+                { "key": "activo", "value": "", "description": "true|false (opcional)" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener usuario por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "usuarios", "{{usuarioId}}" ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": \"Password.123\",\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"credito\", \"cobranza\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "usuarios" ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": null,\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"credito\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "usuarios", "{{usuarioId}}" ]
+            },
+            "description": "password es opcional en edición (enviar null para no cambiarla)."
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado (activar/desactivar)",
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}/estado",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "usuarios", "{{usuarioId}}", "estado" ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Listar roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles" ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener rol por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}" ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios del rol",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}/usuarios",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}", "usuarios" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA."
+          },
+          "response": []
+        },
+        {
+          "name": "Permisos del rol",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}/permisos",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}", "permisos" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear rol",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Analista de Crédito\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"credito\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. slug debe ser kebab-case en minúsculas."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar rol",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Analista de Crédito Senior\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"credito\", \"cobranza\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar rol",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. Responde 204 No Content."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sistemas",
+      "item": [
+        {
+          "name": "Listar sistemas (resumen)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas" ]
+            },
+            "description": "Usado por sidebar/dashboard del frontend."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener sistema por ID o slug",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaSlug}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaSlug}}" ]
+            },
+            "description": "{{sistemaSlug}} puede ser el UUID o el slug del sistema. Responde el árbol completo (secciones/subsecciones/módulos)."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear sistema",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"credito\",\n  \"descripcion\": \"Gestión de créditos\",\n  \"icono\": \"credit-card\",\n  \"url\": \"https://credito.confianza.pe\",\n  \"version\": \"1.0.0\",\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. slug debe ser kebab-case en minúsculas."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar sistema",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"credito\",\n  \"descripcion\": \"Gestión integral de créditos\",\n  \"icono\": \"credit-card\",\n  \"url\": \"https://credito.confianza.pe\",\n  \"version\": \"1.1.0\",\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaId}}" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. El path param aquí es UUID (no admite slug)."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar sistema",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaId}}" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. Responde 204 No Content."
+          },
+          "response": []
+        },
+        {
+          "name": "Reemplazar estructura (secciones/módulos)",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"nombre\": \"Operaciones\",\n    \"slug\": \"operaciones\",\n    \"subsecciones\": [\n      {\n        \"nombre\": \"Solicitudes\",\n        \"slug\": \"solicitudes\",\n        \"modulos\": [\n          { \"nombre\": \"Nueva solicitud\", \"slug\": \"nueva-solicitud\", \"activo\": true },\n          { \"nombre\": \"Bandeja\", \"slug\": \"bandeja\", \"activo\": true }\n        ]\n      }\n    ]\n  }\n]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}/estructura",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "estructura" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. Reemplaza el árbol completo de secciones > subsecciones > módulos del sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Permisos del sistema (por rol)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}/permisos",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "permisos" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA."
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar permisos de un rol en el sistema",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modulos\": [\n    \"00000000-0000-0000-0000-000000000001\",\n    \"00000000-0000-0000-0000-000000000002\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}/permisos/{{rolId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "permisos", "{{rolId}}" ]
+            },
+            "description": "Requiere rol ADMIN_SISTEMA. Upsert de los módulos permitidos para {{rolId}} en {{sistemaId}}."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

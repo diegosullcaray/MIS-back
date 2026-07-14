@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIS · Figma UX Kit — Financiera Confianza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════
+     RESET & BASE
+  ════════════════════════════════════════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    /* ── Brand Tokens ────────────────────────────── */
+    --mis-primary:          #1D396E;
+    --mis-primary-hover:    #162D58;
+    --mis-primary-light:    #E8EDF5;
+    --mis-secondary:        #42ADE0;
+    --mis-secondary-hover:  #2F9FD4;
+    --mis-secondary-light:  #E8F6FC;
+    --mis-accent:           #42ADE0;
+    --mis-accent-amber:     #D97706;
+
+    /* ── Surface Tokens ──────────────────────────── */
+    --mis-bg:               #F4F6F9;
+    --mis-surface:          #FFFFFF;
+    --mis-sidebar-bg:       #1D396E;
+    --mis-panel-bg:         #F8FAFC;
+    --mis-panel-bg-hover:   #EFF2F7;
+    --mis-code-bg:          #0F172A;
+
+    /* ── Text Tokens ─────────────────────────────── */
+    --mis-text-primary:     #1D396E;
+    --mis-text-secondary:   #5A6A85;
+    --mis-text-tertiary:    #94A3B8;
+    --mis-text-inverse:     #FFFFFF;
+
+    /* ── Border Tokens ───────────────────────────── */
+    --mis-border:           rgba(29,57,110,0.10);
+    --mis-border-strong:    rgba(29,57,110,0.20);
+
+    /* ── State Tokens ────────────────────────────── */
+    --mis-success:          #22C55E;
+    --mis-success-bg:       #DCFCE7;
+    --mis-success-text:     #166534;
+    --mis-warning:          #F59E0B;
+    --mis-warning-bg:       #FEF9C3;
+    --mis-warning-text:     #854D0E;
+    --mis-danger:           #EF4444;
+    --mis-danger-bg:        #FEE2E2;
+    --mis-danger-text:      #991B1B;
+    --mis-neutral:          #94A3B8;
+    --mis-neutral-bg:       #F1F5F9;
+    --mis-neutral-text:     #475569;
+
+    /* ── Shadow Tokens ───────────────────────────── */
+    --mis-shadow-xs:  0 1px 2px rgba(0,0,0,0.04);
+    --mis-shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --mis-shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --mis-shadow-lg:  0 8px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+    --mis-shadow-xl:  0 16px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.08);
+    --mis-shadow-focus: 0 0 0 3px rgba(66,173,224,0.35);
+    --mis-shadow-focus-danger: 0 0 0 3px rgba(239,68,68,0.30);
+
+    /* ── Radius Tokens ───────────────────────────── */
+    --mis-radius-xs:  4px;
+    --mis-radius-sm:  6px;
+    --mis-radius-md:  10px;
+    --mis-radius-lg:  14px;
+    --mis-radius-xl:  20px;
+    --mis-radius-full: 9999px;
+
+    /* ── Spacing Scale (4px base) ────────────────── */
+    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+    --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+    --sp-12: 48px; --sp-16: 64px;
+
+    /* ── Typography Scale ────────────────────────── */
+    --text-xs:   11px; --text-sm: 13px; --text-base: 15px;
+    --text-lg:   17px; --text-xl: 22px; --text-2xl:  28px;
+    --text-3xl:  36px;
+
+    /* ── Z-index Scale ───────────────────────────── */
+    --z-base: 0; --z-dropdown: 100; --z-modal: 200; --z-toast: 300;
+
+    /* ── Transition Tokens ───────────────────────── */
+    --transition-fast: 120ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 350ms ease;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--mis-primary);
+    color: #E2E8F0;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* ── Icon System ─────────────────────────────────── */
+  .ico { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ico svg { display: block; }
+
+  /* ═══════════════════════════════════════════════════
+     KIT TOP NAV
+  ════════════════════════════════════════════════════ */
+  .kit-topbar {
+    position: sticky; top: 0; z-index: var(--z-toast);
+    background: rgba(10,15,30,0.96); backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid rgba(66,173,224,0.14);
+    padding: 0 32px; display: flex; align-items: center; height: 52px; gap: 0;
+  }
+  .kit-logo { font-size: 14px; font-weight: 700; color: #42ADE0; letter-spacing: -0.3px; margin-right: 28px; white-space: nowrap; font-family: 'Fira Code', monospace; }
+  .kit-logo span { color: rgba(255,255,255,0.7); font-weight: 400; }
+  .kit-nav { display: flex; gap: 2px; overflow-x: auto; flex: 1; scrollbar-width: none; }
+  .kit-nav::-webkit-scrollbar { display: none; }
+  .kit-nav a { padding: 6px 12px; border-radius: var(--mis-radius-sm); font-size: 12px; font-weight: 500; color: #64748B; text-decoration: none; white-space: nowrap; transition: all var(--transition-fast); }
+  .kit-nav a:hover { background: rgba(66,173,224,0.10); color: #42ADE0; }
+  .kit-nav a.active { background: rgba(66,173,224,0.16); color: #42ADE0; }
+  .kit-badge { padding: 3px 10px; background: rgba(66,173,224,0.15); color: #42ADE0; border-radius: var(--mis-radius-full); font-size: 10px; font-weight: 700; white-space: nowrap; letter-spacing: 0.3px; border: 1px solid rgba(66,173,224,0.25); }
+  .kit-badge-new { padding: 3px 8px; background: rgba(245,158,11,0.15); color: #F59E0B; border-radius: var(--mis-radius-full); font-size: 9px; font-weight: 700; margin-left: 4px; border: 1px solid rgba(245,158,11,0.25); }
+
+  /* ═══════════════════════════════════════════════════
+     SECTION WRAPPERS
+  ════════════════════════════════════════════════════ */
+  .section { padding: 64px 48px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .section-label { font-size: 11px; font-weight: 600; color: #42ADE0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; font-family: 'Fira Code', monospace; }
+  .section-title { font-size: 30px; font-weight: 700; color: #fff; letter-spacing: -0.6px; margin-bottom: 8px; font-family: 'Fira Sans', sans-serif; }
+  .section-desc { font-size: 14px; color: #94A3B8; max-width: 640px; line-height: 1.7; margin-bottom: 36px; }
+  .section-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; background: rgba(34,197,94,0.1); color: #22C55E; border-radius: var(--mis-radius-full); font-size: 10px; font-weight: 700; border: 1px solid rgba(34,197,94,0.2); margin-left: 10px; vertical-align: middle; }
+
+  .grid { display: grid; gap: 24px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+  /* ── Frame Wrappers ──────────────────────────────── */
+  .frame-wrapper { display: flex; flex-direction: column; gap: 10px; }
+  .frame-label { font-size: 10px; font-weight: 700; color: #42ADE0; letter-spacing: 1px; text-transform: uppercase; font-family: 'Fira Code', monospace; }
+  .frame-title { font-size: 14px; font-weight: 600; color: #CBD5E1; }
+  .frame-desc  { font-size: 12px; color: #64748B; margin-top: 2px; line-height: 1.5; }
+  .frame { background: var(--mis-bg); border-radius: var(--mis-radius-lg); overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,0.06), var(--mis-shadow-xl); }
+
+  /* macOS window chrome */
+  .frame-chrome { background: #E5E9EF; height: 36px; display: flex; align-items: center; padding: 0 14px; gap: 6px; border-bottom: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .dot.r { background: #FF5F57; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+  .dot.y { background: #FFBD2E; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+  .dot.g { background: #28C840; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+  .url-bar { margin-left: 10px; font-size: 10px; color: #6B7280; font-family: 'Fira Code', monospace; background: rgba(255,255,255,0.7); padding: 3px 10px; border-radius: var(--mis-radius-sm); flex: 1; max-width: 380px; }
+
+  /* ══════════════════════════════════════════════════
+     APP SHELL — 3 columnas macOS
+     Col1 (56px navy) + Col2 (220px panel) + Main
+  ═════════════════════════════════════════════════════ */
+  .app-shell { display: flex; height: 540px; }
+
+  /* Col 1 — Tira de íconos (56px fija, Navy) */
+  .app-col1 {
+    width: 56px; background: var(--mis-sidebar-bg);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 0 12px; gap: 2px; flex-shrink: 0;
+  }
+  .col1-logo {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: rgba(66,173,224,0.22);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px; flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(66,173,224,0.3);
+  }
+  .col1-logo svg { display: block; }
+  .col1-sep { width: 28px; height: 1px; background: rgba(255,255,255,0.10); margin: 4px 0; }
+  .col1-spacer { flex: 1; }
+
+  /* Ícono de sistema en Col 1 */
+  .sb-icon {
+    width: 42px; height: 42px; border-radius: 11px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; gap: 3px; transition: background var(--transition-fast), transform var(--transition-fast);
+    position: relative;
+  }
+  .sb-icon:hover { background: rgba(255,255,255,0.09); transform: scale(1.04); }
+  .sb-icon.active { background: rgba(66,173,224,0.22); box-shadow: 0 0 0 1px rgba(66,173,224,0.3); }
+  .sb-icon .sb-ico svg { color: rgba(255,255,255,0.55); width: 18px; height: 18px; transition: color var(--transition-fast); }
+  .sb-icon .sb-lbl { font-size: 8px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.2px; font-family: 'Fira Sans', sans-serif; }
+  .sb-icon.active .sb-ico svg { color: #42ADE0; }
+  .sb-icon.active .sb-lbl { color: #42ADE0; }
+  /* Indicador activo en borde izquierdo */
+  .sb-icon.active::before {
+    content: ''; position: absolute; left: -1px; top: 50%;
+    transform: translateY(-50%); width: 3px; height: 20px;
+    background: #42ADE0; border-radius: 0 3px 3px 0;
+  }
+
+  /* Col 2 — Panel de navegación (220px) */
+  .app-col2 {
+    width: 220px; background: var(--mis-panel-bg);
+    border-right: 1px solid var(--mis-border);
+    flex-shrink: 0; overflow-y: auto; padding: 0;
+  }
+  .nav-panel-header {
+    padding: 12px 14px 10px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--mis-border);
+    margin-bottom: 4px;
+  }
+  .nav-panel-header svg { width: 14px; height: 14px; color: var(--mis-text-secondary); flex-shrink: 0; }
+  .nav-panel-header .ph-title { font-size: 12px; font-weight: 700; color: var(--mis-text-primary); }
+  .nav-section { padding: 4px 0 6px; }
+  .nav-section-title {
+    font-size: 9px; font-weight: 700; color: var(--mis-text-tertiary);
+    letter-spacing: 0.9px; text-transform: uppercase;
+    padding: 8px 14px 4px; font-family: 'Fira Code', monospace;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 14px;
+    font-size: 12px; color: var(--mis-text-secondary);
+    cursor: pointer; border-right: 2.5px solid transparent;
+    transition: all var(--transition-fast); border-radius: 0;
+    font-family: 'Fira Sans', sans-serif;
+  }
+  .nav-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .nav-item:hover { background: rgba(29,57,110,0.05); color: var(--mis-text-primary); }
+  .nav-item.active {
+    background: rgba(66,173,224,0.09);
+    color: var(--mis-primary); font-weight: 600;
+    border-right-color: var(--mis-accent);
+  }
+  .nav-item.active svg { color: var(--mis-accent); }
+  .nav-item .nav-badge {
+    margin-left: auto; font-size: 8px; font-weight: 700;
+    padding: 1px 5px; border-radius: var(--mis-radius-full);
+    background: rgba(29,57,110,0.12); color: var(--mis-primary);
+  }
+
+  /* Zona principal */
+  .app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  /* Header — glass, altura 44px macOS */
+  .app-header {
+    height: 44px; background: rgba(255,255,255,0.90);
+    backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid var(--mis-border);
+    display: flex; align-items: center; padding: 0 18px; gap: 10px; flex-shrink: 0;
+  }
+  .header-wordmark { font-size: 13px; font-weight: 800; color: var(--mis-primary); letter-spacing: -0.3px; font-family: 'Fira Code', monospace; }
+  .header-sep { width: 1px; height: 16px; background: var(--mis-border); }
+  .header-breadcrumb { font-size: 12px; color: var(--mis-text-secondary); flex: 1; }
+  .header-breadcrumb strong { color: var(--mis-text-primary); font-weight: 500; }
+
+  /* User pill en header */
+  .header-user-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 8px 4px 4px; border-radius: 8px;
+    cursor: pointer; transition: background var(--transition-fast);
+    border: none; background: transparent; font-family: inherit;
+  }
+  .header-user-btn:hover { background: rgba(29,57,110,0.07); }
+  .avatar-sm {
+    width: 27px; height: 27px; border-radius: 50%;
+    background: linear-gradient(135deg, #1D396E, #42ADE0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9.5px; color: #fff; font-weight: 800; flex-shrink: 0;
+    font-family: 'Fira Sans', sans-serif;
+  }
+  .header-user-name { font-size: 12px; font-weight: 500; color: var(--mis-text-primary); }
+  .header-user-caret svg { width: 12px; height: 12px; color: var(--mis-text-tertiary); }
+
+  /* User dropdown */
+  .user-dropdown {
+    background: #fff; border-radius: var(--mis-radius-md);
+    border: 1px solid var(--mis-border);
+    box-shadow: var(--mis-shadow-xl);
+    overflow: hidden; min-width: 200px;
+  }
+  .user-dropdown-header { padding: 12px 14px; border-bottom: 1px solid var(--mis-border); }
+  .user-dropdown-header .u-name { font-size: 12px; font-weight: 700; color: var(--mis-text-primary); }
+  .user-dropdown-header .u-email { font-size: 10px; color: var(--mis-text-tertiary); margin-top: 2px; }
+  .user-dropdown-header .u-role { display: inline-flex; margin-top: 5px; font-size: 9px; font-weight: 700; padding: 1px 7px; background: rgba(29,57,110,0.10); color: var(--mis-primary); border-radius: var(--mis-radius-full); }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px; font-size: 12px; color: var(--mis-text-secondary);
+    cursor: pointer; transition: background var(--transition-fast);
+  }
+  .dropdown-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .dropdown-item:hover { background: var(--mis-panel-bg); color: var(--mis-text-primary); }
+  .dropdown-item.danger { color: #B91C1C; }
+  .dropdown-item.danger:hover { background: #FFF1F2; }
+  .dropdown-sep { height: 1px; background: var(--mis-border); margin: 2px 0; }
+
+  /* Content area */
+  .app-content { flex: 1; padding: 16px; overflow-y: auto; background: var(--mis-bg); }
+
+  /* ═══════════════════════════════════════════════════
+     DESIGN TOKENS DISPLAY
+  ════════════════════════════════════════════════════ */
+  .color-swatch { border-radius: var(--mis-radius-md); overflow: hidden; box-shadow: var(--mis-shadow-sm); }
+  .swatch-color { height: 72px; }
+  .swatch-info { background: #1A2235; padding: 10px 12px; }
+  .swatch-name { font-size: 11px; font-weight: 700; color: #CBD5E1; }
+  .swatch-hex  { font-size: 10px; color: #64748B; font-family: 'Fira Code', monospace; margin-top: 2px; }
+  .swatch-desc { font-size: 10px; color: #475569; margin-top: 2px; line-height: 1.4; }
+
+  .token-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+  .token-row:last-child { border-bottom: none; }
+  .token-name { font-family: 'Fira Code', monospace; color: #A5F3FC; width: 220px; flex-shrink: 0; }
+  .token-value { font-family: 'Fira Code', monospace; color: #FCA5A5; flex: 1; }
+  .token-preview { width: 40px; height: 24px; border-radius: var(--mis-radius-xs); flex-shrink: 0; border: 1px solid rgba(255,255,255,0.08); }
+
+  /* ═══════════════════════════════════════════════════
+     KPI CARDS
+  ════════════════════════════════════════════════════ */
+  .kpi-card {
+    background: #fff; border-radius: var(--mis-radius-md); padding: 12px 14px;
+    box-shadow: var(--mis-shadow-sm); border: 1px solid var(--mis-border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+  }
+  .kpi-card:hover { box-shadow: var(--mis-shadow-md); transform: translateY(-1px); }
+  .kpi-label { font-size: 9.5px; color: var(--mis-text-tertiary); font-weight: 600; margin-bottom: 3px; text-transform: uppercase; letter-spacing: .6px; font-family: 'Fira Code', monospace; }
+  .kpi-value { font-size: 20px; font-weight: 700; color: var(--mis-text-primary); letter-spacing: -0.5px; line-height: 1; }
+  .kpi-change { font-size: 9.5px; font-weight: 600; margin-top: 4px; }
+  .kpi-change.up { color: var(--mis-success); }
+  .kpi-change.neutral { color: var(--mis-text-tertiary); }
+  .kpi-change.down { color: var(--mis-danger); }
+  .kpi-icon-wrap { width: 34px; height: 34px; border-radius: var(--mis-radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .kpi-icon-wrap svg { width: 16px; height: 16px; }
+
+  /* Mini bar chart inside KPI */
+  .kpi-chart { display: flex; align-items: flex-end; gap: 2px; height: 20px; margin-top: 6px; }
+  .kpi-bar { width: 4px; border-radius: 2px 2px 0 0; background: var(--mis-secondary); opacity: 0.5; transition: opacity var(--transition-base); }
+  .kpi-bar:last-child { opacity: 1; }
+
+  /* ═══════════════════════════════════════════════════
+     COMPONENTS PANEL
+  ════════════════════════════════════════════════════ */
+  .comp-card { background: #141B2D; border-radius: var(--mis-radius-md); padding: 20px; border: 1px solid rgba(255,255,255,0.06); }
+  .comp-title { font-size: 13px; font-weight: 700; color: #CBD5E1; margin-bottom: 16px; font-family: 'Fira Sans', sans-serif; }
+
+  /* ── Buttons ─────────────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: var(--mis-radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: 'Fira Sans', 'Inter', sans-serif; transition: all var(--transition-fast); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn-primary   { background: var(--mis-primary); color: #fff; }
+  .btn-primary:hover { background: var(--mis-primary-hover); transform: translateY(-1px); box-shadow: var(--mis-shadow-sm); }
+  .btn-secondary { background: var(--mis-secondary); color: #fff; }
+  .btn-secondary:hover { background: var(--mis-secondary-hover); }
+  .btn-ghost     { background: transparent; color: var(--mis-primary); border: 1px solid var(--mis-border-strong); }
+  .btn-ghost:hover { background: rgba(29,57,110,0.06); }
+  .btn-danger    { background: var(--mis-danger); color: #fff; }
+  .btn-danger:hover { background: #DC2626; }
+  .btn-sm { padding: 4px 10px; font-size: 11.5px; border-radius: var(--mis-radius-xs); }
+  .btn-icon { padding: 6px; border-radius: var(--mis-radius-sm); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+  /* ── Badges ──────────────────────────────────────── */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--mis-radius-full); font-size: 11px; font-weight: 600; line-height: 1.4; }
+  .badge-primary   { background: var(--mis-primary-light); color: var(--mis-primary); }
+  .badge-secondary { background: var(--mis-secondary-light); color: #1E6FA0; }
+  .badge-success   { background: var(--mis-success-bg); color: var(--mis-success-text); }
+  .badge-warning   { background: var(--mis-warning-bg); color: var(--mis-warning-text); }
+  .badge-danger    { background: var(--mis-danger-bg); color: var(--mis-danger-text); }
+  .badge-neutral   { background: var(--mis-neutral-bg); color: var(--mis-neutral-text); }
+  .badge svg { width: 10px; height: 10px; }
+
+  /* ── Inputs ──────────────────────────────────────── */
+  .inp { height: 36px; border-radius: var(--mis-radius-sm); border: 1px solid var(--mis-border-strong); background: #fff; padding: 0 11px; font-size: 13px; font-family: 'Fira Sans', 'Inter', sans-serif; color: var(--mis-text-primary); outline: none; width: 100%; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
+  .inp:focus { border-color: var(--mis-accent); box-shadow: var(--mis-shadow-focus); }
+  .inp-error { border-color: var(--mis-danger) !important; }
+  .inp-error:focus { box-shadow: var(--mis-shadow-focus-danger); }
+  .input-group { display: flex; flex-direction: column; gap: 4px; }
+  .input-label { font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: .8px; font-family: 'Fira Code', monospace; }
+  .inp-helper { font-size: 11px; color: #64748B; }
+  /* ── Chip checkboxes ─────────────────────────── */
+  .chip-check { padding: 5px 12px; border-radius: 99px; border: 1.5px solid var(--mis-border); font-size: 11px; font-weight: 500; color: var(--mis-text-secondary); cursor: pointer; display: inline-block; transition: all .12s; }
+  .chip-check.checked { background: rgba(29,57,110,0.08); border-color: var(--mis-primary); color: var(--mis-primary); }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── Data table ──────────────────────────────── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { padding: 8px 12px; background: #F8FAFC; text-align: left; font-size: 9.5px; font-weight: 600; color: var(--mis-text-tertiary); text-transform: uppercase; letter-spacing: .6px; border-bottom: 1px solid var(--mis-border); }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid rgba(29,57,110,0.05); color: var(--mis-text-primary); vertical-align: middle; }
+  .data-table tr:hover td { background: rgba(248,250,252,0.8); }
+
+  /* ── Toast ───────────────────────────────────── */
+  .toast { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; background: #fff; box-shadow: var(--mis-shadow-md); max-width: 360px; border-left: 3px solid; }
+  .toast-success { border-color: #22C55E; } .toast-error { border-color: #EF4444; }
+  .toast-warning { border-color: #F59E0B; } .toast-info   { border-color: #42ADE0; }
+  .toast-icon { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; }
+  .toast-icon svg { width: 18px; height: 18px; }
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 12.5px; font-weight: 600; color: var(--mis-text-primary); }
+  .toast-msg   { font-size: 11.5px; color: var(--mis-text-secondary); margin-top: 2px; line-height: 1.4; }
+  .toast-close { width: 16px; height: 16px; cursor: pointer; color: var(--mis-text-tertiary); }
+  .toast-close svg { width: 16px; height: 16px; }
+  .toast-action { display: inline-flex; font-size: 11px; font-weight: 600; color: var(--mis-accent); margin-top: 5px; cursor: pointer; }
+
+  /* ── Inline alerts ───────────────────────────── */
+  .inline-alert { display: flex; align-items: flex-start; gap: 9px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; }
+  .inline-alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+  .alert-info    { background: rgba(66,173,224,0.07); border: 1px solid rgba(66,173,224,0.2); color: #0E4D6A; }
+  .alert-success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+  .alert-warning { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; }
+  .alert-error   { background: #FFF1F2; border: 1px solid #FECDD3; color: #9F1239; }
+
+  /* ── Notification panel ──────────────────────── */
+  .notif-panel { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: var(--mis-shadow-lg); width: 300px; border: 1px solid var(--mis-border); }
+  .notif-header { padding: 12px 14px; border-bottom: 1px solid var(--mis-border); display: flex; align-items: center; justify-content: space-between; }
+  .notif-header-title { font-size: 13px; font-weight: 600; color: var(--mis-text-primary); display: flex; align-items: center; gap: 6px; }
+  .notif-header-title svg { width: 14px; height: 14px; }
+  .notif-item { display: flex; gap: 10px; padding: 10px 14px; border-bottom: 1px solid rgba(29,57,110,0.05); cursor: pointer; }
+  .notif-item:hover { background: #F8FAFC; }
+  .notif-item.unread { background: rgba(66,173,224,0.04); }
+  .notif-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mis-accent); margin-top: 5px; flex-shrink: 0; }
+  .notif-dot.read { background: transparent; }
+  .notif-body { flex: 1; }
+  .notif-text { font-size: 12px; color: var(--mis-text-primary); line-height: 1.4; }
+  .notif-meta { font-size: 10px; color: var(--mis-text-tertiary); margin-top: 3px; }
+  .notif-footer { padding: 10px 14px; text-align: center; font-size: 12px; color: var(--mis-accent); font-weight: 500; cursor: pointer; }
+
+  /* ── Skeletons ───────────────────────────────── */
+  @keyframes skeleton-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .skeleton { background: linear-gradient(90deg,#E2E8F0 0%,#CBD5E1 50%,#E2E8F0 100%); animation: skeleton-pulse 1.5s ease infinite; border-radius: 5px; }
+
+  /* ── Dialog ──────────────────────────────────── */
+  .dialog { background: #fff; border-radius: 14px; padding: 24px; box-shadow: var(--mis-shadow-lg); border: 1px solid var(--mis-border); }
+  .dialog-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .dialog-icon svg { width: 18px; height: 18px; }
+  .dialog-title { font-size: 14px; font-weight: 700; color: var(--mis-text-primary); margin-bottom: 6px; }
+  .dialog-msg   { font-size: 13px; color: var(--mis-text-secondary); line-height: 1.5; margin-bottom: 20px; }
+  .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* ── Form panel ──────────────────────────────── */
+  .form-panel { background: #fff; border-radius: 12px; padding: 20px; box-shadow: var(--mis-shadow-sm); border: 1px solid var(--mis-border); }
+
+  /* ── Empty / error states ────────────────────── */
+  .center-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; gap: 10px; background: #fff; }
+  .state-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
+  .state-icon svg { width: 24px; height: 24px; }
+
+  /* ── Spacing tokens ──────────────────────────── */
+  .space-bar { height: 14px; background: rgba(66,173,224,0.38); border-radius: 3px; }
+  .radius-box { background: rgba(66,173,224,0.14); border: 1.5px solid rgba(66,173,224,0.35); width: 44px; height: 44px; }
+  .shadow-box { width: 60px; height: 38px; background: #fff; border-radius: 8px; }
+
+  /* ── Typography ──────────────────────────────── */
+  .typo-row { display: flex; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(29,57,110,0.06); }
+  .typo-meta { width: 80px; flex-shrink: 0; font-size: 10px; color: #64748B; font-family: 'Fira Code', monospace; }
+  .typo-desc { font-size: 11px; color: #64748B; }
+
+  /* ── Activity row ────────────────────────────── */
+  .activity-row { font-size: 10px; color: #5A6A85; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); display: flex; align-items: center; gap: 6px; }
+  .activity-row svg { width: 11px; height: 11px; color: var(--mis-text-tertiary); flex-shrink: 0; }
+  .activity-row:last-child { border-bottom: none; }
+
+  /* ── Scrollbar ───────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(66,173,224,0.3); border-radius: 99px; }
+
+  @media(max-width:900px){
+    .grid-4 { grid-template-columns: repeat(2,1fr); }
+    .grid-3,.grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     TOP NAV
+════════════════════════════════════════════════════ -->
+<nav class="kit-topbar">
+  <div class="kit-logo">MIS <span>/ UX Kit</span></div>
+  <div class="kit-nav">
+    <a href="#branding" class="active">Branding <span class="kit-badge-new">UPDATED</span></a>
+    <a href="#typography">Tipografía <span class="kit-badge-new">NEW</span></a>
+    <a href="#spacing">Espaciado</a>
+    <a href="#screens">Pantallas</a>
+    <a href="#components">Componentes <span class="kit-badge-new">UPDATED</span></a>
+    <a href="#messages">Mensajes</a>
+    <a href="#notifications">Notificaciones</a>
+    <a href="#states">Estados</a>
+    <a href="#iam">IAM</a>
+    <a href="#remotes">Embebidos</a>
+  </div>
+  <span class="kit-badge">Figma Kit v3.0</span>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     01 · BRANDING
+════════════════════════════════════════════════════ -->
+<section class="section" id="branding">
+  <div class="section-label">01 · Design Tokens</div>
+  <h2 class="section-title">Branding &amp; Paleta de Colores</h2>
+  <p class="section-desc">Paleta institucional Financiera Confianza — Navy #1D396E primario, Sky Blue #42ADE0 acento interactivo. Estética macOS minimalista. Modo Light.</p>
+
+  <h3 style="font-size:11px;font-weight:600;color:#64748B;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Colores Primarios</h3>
+  <div class="grid grid-4" style="margin-bottom:28px;">
+    <div class="color-swatch"><div class="swatch-color" style="background:#1D396E;"></div><div class="swatch-info"><div class="swatch-name">Primary Navy</div><div class="swatch-hex">--mis-primary · #1D396E</div><div class="swatch-desc">Color institucional principal</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#162D58;"></div><div class="swatch-info"><div class="swatch-name">Primary Hover</div><div class="swatch-hex">--mis-primary-hover · #162D58</div><div class="swatch-desc">Hover/Pressed del primario</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#E8EDF5;border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">Primary Light</div><div class="swatch-hex">--mis-primary-light · #E8EDF5</div><div class="swatch-desc">Chips, badges, fondo suave</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:rgba(29,57,110,0.10);border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">--mis-border · rgba(29,57,110,.10)</div><div class="swatch-desc">Bordes sutiles de tono marca</div></div></div>
+  </div>
+
+  <h3 style="font-size:11px;font-weight:600;color:#64748B;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Colores Secundarios / Acento</h3>
+  <div class="grid grid-4" style="margin-bottom:28px;">
+    <div class="color-swatch"><div class="swatch-color" style="background:#42ADE0;"></div><div class="swatch-info"><div class="swatch-name">Secondary Sky</div><div class="swatch-hex">--mis-secondary · #42ADE0</div><div class="swatch-desc">Acento interactivo / activos</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#2F9FD4;"></div><div class="swatch-info"><div class="swatch-name">Secondary Hover</div><div class="swatch-hex">--mis-secondary-hover · #2F9FD4</div><div class="swatch-desc">Hover del secundario</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#E8F6FC;border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">Secondary Light</div><div class="swatch-hex">--mis-secondary-light · #E8F6FC</div><div class="swatch-desc">Fondo suave secundario</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#F4F6F9;border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">App Background</div><div class="swatch-hex">--mis-bg · #F4F6F9</div><div class="swatch-desc">Fondo general de la app</div></div></div>
+  </div>
+
+  <h3 style="font-size:11px;font-weight:600;color:#64748B;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Superficies &amp; Sidebar</h3>
+  <div class="grid grid-4" style="margin-bottom:28px;">
+    <div class="color-swatch"><div class="swatch-color" style="background:#FFFFFF;border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">--mis-surface · #FFFFFF</div><div class="swatch-desc">Cards, paneles, modales</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#1D396E;"></div><div class="swatch-info"><div class="swatch-name">Sidebar Col1</div><div class="swatch-hex">--mis-sidebar-bg · #1D396E</div><div class="swatch-desc">Tira de íconos — Navy</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#F8FAFC;border:1px solid #ddd;"></div><div class="swatch-info"><div class="swatch-name">Panel Col2</div><div class="swatch-hex">--mis-panel-bg · #F8FAFC</div><div class="swatch-desc">Panel de navegación secundario</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:linear-gradient(135deg,#1D396E,#42ADE0);"></div><div class="swatch-info"><div class="swatch-name">Gradient Brand</div><div class="swatch-hex">Navy → Sky Blue</div><div class="swatch-desc">Uso en onboarding / splash</div></div></div>
+  </div>
+
+  <h3 style="font-size:11px;font-weight:600;color:#64748B;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Colores de Estado</h3>
+  <div class="grid grid-4">
+    <div class="color-swatch"><div class="swatch-color" style="background:#22C55E;"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#22C55E</div><div class="swatch-desc">Éxito / activo / confirmado</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#F59E0B;"></div><div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#F59E0B</div><div class="swatch-desc">Advertencia / pendiente</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#EF4444;"></div><div class="swatch-info"><div class="swatch-name">Danger</div><div class="swatch-hex">#EF4444</div><div class="swatch-desc">Error / eliminado / denegado</div></div></div>
+    <div class="color-swatch"><div class="swatch-color" style="background:#94A3B8;"></div><div class="swatch-info"><div class="swatch-name">Neutral</div><div class="swatch-hex">#94A3B8</div><div class="swatch-desc">Deshabilitado / inactivo</div></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     02 · TIPOGRAFÍA
+════════════════════════════════════════════════════ -->
+<section class="section" id="typography">
+  <div class="section-label">02 · Design Tokens</div>
+  <h2 class="section-title">Tipografía</h2>
+  <p class="section-desc">Stack -apple-system + Inter como fallback. Escala en 6 pasos: 11px → 28px. Sin serif. Letter-spacing mínimo. macOS HIG.</p>
+
+  <div class="comp-card" style="margin-bottom:20px;">
+    <div class="comp-title">Font Family</div>
+    <div style="font-size:11px;color:#64748B;font-family:'Fira Code',monospace;margin-bottom:12px;">'Inter', 'Fira Sans', sans-serif</div>
+    <div style="font-size:26px;font-weight:700;color:#1D396E;margin-bottom:4px;">Management Information System</div>
+    <div style="font-size:14px;color:#5A6A85;">Financiera Confianza · Panel Administrador Centralizador</div>
+  </div>
+
+  <div style="background:#fff;border-radius:12px;padding:20px 24px;border:1px solid rgba(29,57,110,0.08);">
+    <div class="typo-row"><div class="typo-meta">2xl·28px·700</div><div style="font-size:28px;font-weight:700;color:#1D396E;flex:1;">Panel de Administración</div><div class="typo-desc">--mis-text-2xl · Títulos principales</div></div>
+    <div class="typo-row"><div class="typo-meta">xl·22px·600</div><div style="font-size:22px;font-weight:600;color:#1D396E;flex:1;">Gestión de Usuarios</div><div class="typo-desc">--mis-text-xl · Títulos de vista</div></div>
+    <div class="typo-row"><div class="typo-meta">lg·17px·600</div><div style="font-size:17px;font-weight:600;color:#1D396E;flex:1;">Catálogos del Sistema</div><div class="typo-desc">--mis-text-lg · Secciones Col2</div></div>
+    <div class="typo-row"><div class="typo-meta">base·15px·400</div><div style="font-size:15px;color:#1D396E;flex:1;">Texto base del panel administrador.</div><div class="typo-desc">--mis-text-base · Body</div></div>
+    <div class="typo-row"><div class="typo-meta">sm·13px·400</div><div style="font-size:13px;color:#5A6A85;flex:1;">Texto secundario, metadatos, fechas, descripciones</div><div class="typo-desc">--mis-text-sm · Secundario</div></div>
+    <div class="typo-row" style="border-bottom:none;"><div class="typo-meta">xs·11px·600</div><div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;flex:1;">INICIO · CONTA · RRHH · VENTAS</div><div class="typo-desc">--mis-text-xs · Labels sidebar</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     03 · ESPACIADO
+════════════════════════════════════════════════════ -->
+<section class="section" id="spacing">
+  <div class="section-label">03 · Design Tokens</div>
+  <h2 class="section-title">Espaciado, Radius &amp; Sombras</h2>
+  <p class="section-desc">Múltiplos de 4px (Apple HIG). Border-radius y sombras ultra-sutiles estilo macOS. Ningún elemento tiene sombra agresiva.</p>
+
+  <div class="grid grid-3">
+    <div class="comp-card">
+      <div class="comp-title">Espaciado — Base 4px</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:4px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-1 · 4px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:8px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-2 · 8px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:12px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-3 · 12px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:16px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-4 · 16px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:24px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-6 · 24px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:32px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-8 · 32px</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="space-bar" style="width:48px;"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">space-12 · 48px</div></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-title">Border Radius — macOS</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="radius-box" style="border-radius:6px;"></div><div style="font-size:10px;color:#64748B;">radius-sm · 6px — Botones, inputs</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="radius-box" style="border-radius:10px;"></div><div style="font-size:10px;color:#64748B;">radius-md · 10px — Cards, paneles</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="radius-box" style="border-radius:14px;"></div><div style="font-size:10px;color:#64748B;">radius-lg · 14px — Modales, sidebar</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="radius-box" style="border-radius:20px;"></div><div style="font-size:10px;color:#64748B;">radius-xl · 20px — Frames grandes</div></div>
+        <div style="display:flex;align-items:center;gap:12px;"><div class="radius-box" style="border-radius:999px;width:72px;height:22px;"></div><div style="font-size:10px;color:#64748B;">radius-full · Chips, badges</div></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-title">Sombras — Ultra Sutiles macOS</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:14px;"><div class="shadow-box" style="box-shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">shadow-sm<br>0 1px 3px rgba(0,0,0,.06)</div></div>
+        <div style="display:flex;align-items:center;gap:14px;"><div class="shadow-box" style="box-shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">shadow-md<br>0 4px 16px rgba(0,0,0,.08)</div></div>
+        <div style="display:flex;align-items:center;gap:14px;"><div class="shadow-box" style="box-shadow:0 8px 32px rgba(0,0,0,0.10),0 4px 8px rgba(0,0,0,0.06);"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">shadow-lg<br>0 8px 32px rgba(0,0,0,.10)</div></div>
+        <div style="display:flex;align-items:center;gap:14px;"><div class="shadow-box" style="box-shadow:0 0 0 3px rgba(66,173,224,0.35);"></div><div style="font-size:10px;color:#64748B;font-family:monospace;">shadow-focus<br>0 0 0 3px rgba(66,173,224,.35)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     04 · PANTALLAS — Shell macOS 3 Columnas
+     REGLA: Col1 = solo íconos de sistemas (sin Perfil/Salir)
+            Perfil + Cerrar sesión = header (ícono usuario)
+════════════════════════════════════════════════════ -->
+<section class="section" id="screens">
+  <div class="section-label">04 · Pantallas Principales</div>
+  <h2 class="section-title">Pantallas del Sistema MIS</h2>
+  <p class="section-desc">Shell 3 columnas estilo macOS: Col1 tira íconos de sistemas (56px) + Col2 panel de navegación (220px) + zona principal con header glass. Perfil y Cerrar sesión viven en el menú del usuario en el header — nunca en el sidebar.</p>
+
+  <div class="grid grid-2" style="margin-bottom:32px;">
+
+    <!-- ── Pantalla 01: Dashboard Admin ── -->
+    <div class="frame-wrapper">
+      <div class="frame-label">Pantalla 01</div>
+      <div class="frame-title">Dashboard — Administrador Sistema</div>
+      <div class="frame-desc">Vista inicial. KPIs de usuarios, roles, subsistemas. Actividad reciente.</div>
+      <div class="frame">
+        <div class="frame-chrome">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">localhost:4200/admin/dashboard</div>
+        </div>
+        <div class="app-shell">
+
+          <!-- Col 1 — SOLO íconos de sistemas -->
+          <div class="app-col1">
+            <div class="col1-logo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <div class="col1-sep"></div>
+            <!-- Inicio -->
+            <div class="sb-icon active">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <div class="sb-lbl">Inicio</div>
+            </div>
+            <!-- Contabilidad -->
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+              <div class="sb-lbl">Conta.</div>
+            </div>
+            <!-- RRHH -->
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <div class="sb-lbl">RRHH</div>
+            </div>
+            <!-- Ventas -->
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div class="sb-lbl">Ventas</div>
+            </div>
+            <!-- Logística -->
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+              <div class="sb-lbl">Logíst.</div>
+            </div>
+            <div class="col1-spacer"></div>
+            <!-- Sin Perfil ni Salir aquí — están en el header -->
+          </div>
+
+          <!-- Col 2 — Panel de navegación -->
+          <div class="app-col2">
+            <div class="nav-panel-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <div class="ph-title">Sistema Principal</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Acceso directo</div>
+              <div class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+              </div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Administración</div>
+              <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Catálogos
+              </div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Accesos [Admin]</div>
+              <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Usuarios
+              </div>
+              <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+                Roles
+              </div>
+            </div>
+          </div>
+
+          <!-- Zona principal -->
+          <div class="app-main">
+            <!-- Header con menú de usuario (perfil + cerrar sesión aquí) -->
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div>
+              <div class="header-sep"></div>
+              <div class="header-breadcrumb">Management Information System</div>
+              <!-- User pill — al hacer click muestra dropdown con Perfil + Cerrar sesión -->
+              <div class="header-user-btn">
+                <div class="avatar-sm">DS</div>
+                <div class="header-user-name">Diego S.</div>
+                <div class="header-user-caret">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+            <!-- Dropdown del usuario (estados: normal, expanded) -->
+            <div style="position:relative;display:flex;justify-content:flex-end;padding:0 18px;">
+              <div class="user-dropdown" style="position:absolute;top:6px;right:18px;z-index:10;">
+                <div class="user-dropdown-header">
+                  <div class="u-name">Diego Sullcarayra</div>
+                  <div class="u-email">diego@confianza.pe</div>
+                </div>
+                <div class="dropdown-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Mi perfil
+                </div>
+                <div class="dropdown-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  Preferencias
+                </div>
+                <div class="dropdown-sep"></div>
+                <div class="dropdown-item danger">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Cerrar sesión
+                </div>
+              </div>
+            </div>
+            <div class="app-content" style="padding-top:100px;">
+              <div style="font-size:12px;font-weight:700;color:#1D396E;margin-bottom:12px;">Dashboard General</div>
+              <div class="grid grid-4" style="gap:8px;margin-bottom:12px;">
+                <div class="kpi-card"><div><div class="kpi-label">Usuarios</div><div class="kpi-value">24</div><div class="kpi-change">+3 este mes</div></div><div class="kpi-icon-wrap" style="background:rgba(29,57,110,0.08);"><svg viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Roles</div><div class="kpi-value">5</div><div class="kpi-change" style="color:#94A3B8;">sin cambios</div></div><div class="kpi-icon-wrap" style="background:rgba(66,173,224,0.10);"><svg viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Sistemas</div><div class="kpi-value">4</div><div class="kpi-change">+1 nuevo</div></div><div class="kpi-icon-wrap" style="background:rgba(34,197,94,0.10);"><svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Catálogos</div><div class="kpi-value">12</div><div class="kpi-change">+2</div></div><div class="kpi-icon-wrap" style="background:rgba(245,158,11,0.10);"><svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div></div>
+              </div>
+              <div style="background:#fff;border-radius:8px;padding:10px;border:1px solid rgba(29,57,110,0.06);">
+                <div style="font-size:9.5px;color:#94A3B8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px;">Actividad reciente</div>
+                <div class="activity-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span><strong>Ana López</strong> creada · <span style="color:#94A3B8;">5 min</span></span></div>
+                <div class="activity-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg><span>Rol <strong>Supervisor Ventas</strong> actualizado · <span style="color:#94A3B8;">1h</span></span></div>
+                <div class="activity-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg><span>Remote <strong>Contabilidad</strong> conectado · <span style="color:#94A3B8;">2h</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Pantalla 02: Remote Contabilidad ── -->
+    <div class="frame-wrapper">
+      <div class="frame-label">Pantalla 02</div>
+      <div class="frame-title">Subsistema Embebido — Contabilidad (Remote)</div>
+      <div class="frame-desc">Remote cargado vía Native Federation. Col2 muestra menú del Remote. Badge LIVE.</div>
+      <div class="frame">
+        <div class="frame-chrome">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">localhost:4200/admin/contabilidad/dashboard</div>
+        </div>
+        <div class="app-shell">
+          <div class="app-col1">
+            <div class="col1-logo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <div class="col1-sep"></div>
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <div class="sb-lbl">Inicio</div>
+            </div>
+            <div class="sb-icon active">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+              <div class="sb-lbl">Conta.</div>
+            </div>
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <div class="sb-lbl">RRHH</div>
+            </div>
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div class="sb-lbl">Ventas</div>
+            </div>
+            <div class="col1-spacer"></div>
+          </div>
+          <div class="app-col2">
+            <div class="nav-panel-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+              <div class="ph-title">Contabilidad</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Acceso directo</div>
+              <div class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+              </div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Contabilidad</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Asientos</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Balances</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Reportes</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Configuración</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Parámetros</div>
+            </div>
+          </div>
+          <div class="app-main">
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div>
+              <div class="header-sep"></div>
+              <div class="header-breadcrumb">Contabilidad <span style="color:#94A3B8;font-size:11px;">· Remote</span></div>
+              <div class="header-user-btn">
+                <div class="avatar-sm">DS</div>
+                <div class="header-user-name">DS</div>
+                <div class="header-user-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+            </div>
+            <div class="app-content">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+                <div style="font-size:12px;font-weight:700;color:#1D396E;">Dashboard Contabilidad</div>
+                <span style="font-size:8px;background:rgba(34,197,94,0.12);color:#166534;padding:2px 7px;border-radius:99px;font-weight:600;">LIVE</span>
+              </div>
+              <div style="background:#fff;border-radius:8px;padding:10px;border:1px solid rgba(29,57,110,0.06);margin-bottom:10px;">
+                <div style="font-size:9.5px;color:#94A3B8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px;">Asientos recientes</div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);"><span>Factura #2840 — BCP</span><span style="color:#22C55E;font-weight:600;">S/ 12,500</span></div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);"><span>Pago proveedor #145</span><span style="color:#EF4444;font-weight:600;">-S/ 4,200</span></div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;"><span>Ingreso venta #881</span><span style="color:#22C55E;font-weight:600;">S/ 8,750</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div class="kpi-card"><div><div class="kpi-label">Ingresos</div><div class="kpi-value" style="font-size:18px;">S/148K</div></div><div class="kpi-icon-wrap" style="background:rgba(34,197,94,0.1);"><svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Egresos</div><div class="kpi-value" style="font-size:18px;">S/92K</div></div><div class="kpi-icon-wrap" style="background:rgba(239,68,68,0.1);"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pantallas 03 y 04 -->
+  <div class="grid grid-2">
+
+    <!-- ── Pantalla 03: Catálogos ── -->
+    <div class="frame-wrapper">
+      <div class="frame-label">Pantalla 03</div>
+      <div class="frame-title">Gestión de Catálogos — CRUD</div>
+      <div class="frame-desc">Tabla paginada, búsqueda, acciones inline.</div>
+      <div class="frame">
+        <div class="frame-chrome">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">localhost:4200/admin/catalogos</div>
+        </div>
+        <div class="app-shell">
+          <div class="app-col1">
+            <div class="col1-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <div class="col1-sep"></div>
+            <div class="sb-icon active">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <div class="sb-lbl">Inicio</div>
+            </div>
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+              <div class="sb-lbl">Conta.</div>
+            </div>
+            <div class="col1-spacer"></div>
+          </div>
+          <div class="app-col2">
+            <div class="nav-panel-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <div class="ph-title">Sistema Principal</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</div>
+              <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Catálogos</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Accesos</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Usuarios</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg> Roles</div>
+            </div>
+          </div>
+          <div class="app-main">
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div>
+              <div class="header-sep"></div>
+              <div class="header-breadcrumb">Catálogos</div>
+              <div class="header-user-btn">
+                <div class="avatar-sm">DS</div>
+                <div class="header-user-name">DS</div>
+                <div class="header-user-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+            </div>
+            <div class="app-content">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:#1D396E;">Catálogos del Sistema</div>
+                <button class="btn btn-primary btn-sm">+ Nuevo ítem</button>
+              </div>
+              <div style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid rgba(29,57,110,0.08);">
+                <table class="data-table">
+                  <thead><tr><th>Catálogo</th><th>Registros</th><th>Estado</th><th>Acc.</th></tr></thead>
+                  <tbody>
+                    <tr><td style="font-size:10px;font-weight:500;">Bancos</td><td style="font-size:10px;">45</td><td><span class="badge badge-success" style="font-size:8px;">Activo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+                    <tr><td style="font-size:10px;font-weight:500;">Monedas</td><td style="font-size:10px;">12</td><td><span class="badge badge-success" style="font-size:8px;">Activo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+                    <tr><td style="font-size:10px;font-weight:500;">Departamentos</td><td style="font-size:10px;">26</td><td><span class="badge badge-warning" style="font-size:8px;">Revisión</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+                    <tr><td style="font-size:10px;font-weight:500;">Tipos Cambio</td><td style="font-size:10px;">5</td><td><span class="badge badge-success" style="font-size:8px;">Activo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10px;color:#94A3B8;">
+                <span>1-4 de 12 catálogos</span>
+                <div style="display:flex;gap:3px;">
+                  <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 8px;">← Ant</button>
+                  <button class="btn btn-primary btn-sm" style="font-size:10px;padding:2px 8px;">1</button>
+                  <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 8px;">2</button>
+                  <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 8px;">Sig →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Pantalla 04: Supervisor (rol limitado) ── -->
+    <div class="frame-wrapper">
+      <div class="frame-label">Pantalla 04</div>
+      <div class="frame-title">Vista — Supervisor de Área (rol limitado)</div>
+      <div class="frame-desc">Sin secciones de admin. Col2 solo muestra Dashboard. Solo sus subsistemas.</div>
+      <div class="frame">
+        <div class="frame-chrome">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">localhost:4200/admin/dashboard</div>
+        </div>
+        <div class="app-shell">
+          <div class="app-col1">
+            <div class="col1-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <div class="col1-sep"></div>
+            <div class="sb-icon active">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <div class="sb-lbl">Inicio</div>
+            </div>
+            <div class="sb-icon">
+              <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <div class="sb-lbl">RRHH</div>
+            </div>
+            <div class="col1-spacer"></div>
+          </div>
+          <div class="app-col2">
+            <div class="nav-panel-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <div class="ph-title">Sistema Principal</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Acceso directo</div>
+              <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</div>
+            </div>
+            <div style="padding:10px 14px;background:rgba(245,158,11,0.06);margin:6px 8px;border-radius:7px;border:1px solid rgba(245,158,11,0.18);">
+              <div style="font-size:9px;color:#92400E;font-weight:600;">Solo lectura</div>
+              <div style="font-size:9px;color:#B45309;margin-top:1px;">Supervisor de Área</div>
+            </div>
+          </div>
+          <div class="app-main">
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div>
+              <div class="header-sep"></div>
+              <div class="header-breadcrumb">Dashboard</div>
+              <div class="header-user-btn">
+                <div class="avatar-sm" style="background:#5A6A85;">AL</div>
+                <div class="header-user-name">Ana L.</div>
+                <div class="header-user-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+            </div>
+            <div class="app-content">
+              <div style="font-size:12px;font-weight:700;color:#1D396E;margin-bottom:12px;">Bienvenida, Ana López</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+                <div class="kpi-card"><div><div class="kpi-label">Mi área</div><div class="kpi-value" style="font-size:18px;">RRHH</div></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Subsistemas</div><div class="kpi-value" style="font-size:18px;">1</div></div></div>
+              </div>
+              <div style="background:#fff;border-radius:8px;padding:10px;border:1px solid rgba(29,57,110,0.06);">
+                <div style="font-size:9.5px;color:#94A3B8;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;">Subsistemas asignados</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="width:28px;height:28px;border-radius:7px;background:rgba(29,57,110,0.08);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                  <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#1D396E;">RRHH</div><div style="font-size:9px;color:#94A3B8;">Activo · localhost:4202</div></div>
+                  <span class="badge badge-success" style="font-size:8px;">Online</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     05 · COMPONENTES
+════════════════════════════════════════════════════ -->
+<section class="section" id="components">
+  <div class="section-label">05 · Componentes UI</div>
+  <h2 class="section-title">Librería de Componentes</h2>
+  <p class="section-desc">Botones, badges, inputs, selects, chip-checkboxes, tabla paginada. PrimeNG + Tailwind v4 + MisTheme. Sin ripple. Iconos SVG Lucide-style.</p>
+
+  <div class="grid grid-2" style="margin-bottom:20px;">
+    <div class="comp-card">
+      <div class="comp-title">Botones — Variantes</div>
+      <div style="margin-bottom:12px;"><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;">Primarios</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <button class="btn btn-primary">Guardar cambios</button>
+          <button class="btn btn-secondary">Nuevo usuario</button>
+          <button class="btn btn-ghost">Cancelar</button>
+          <button class="btn btn-danger">Eliminar</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;"><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;">Tamaños</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <button class="btn btn-primary btn-sm">Pequeño</button>
+          <button class="btn btn-primary">Normal</button>
+          <button class="btn btn-primary" style="padding:10px 22px;font-size:14px;border-radius:9px;">Grande</button>
+        </div>
+      </div>
+      <div><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;">Estados</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <button class="btn btn-primary" style="opacity:.4;cursor:not-allowed;">Deshabilitado</button>
+          <button class="btn btn-primary" style="opacity:.7;">Guardando…</button>
+          <button class="btn btn-ghost" style="padding:7px;width:34px;height:34px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-title">Badges, Chips &amp; Estado</div>
+      <div style="margin-bottom:12px;"><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;">Roles &amp; permisos</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <span class="badge badge-primary">Admin Sistema</span>
+          <span class="badge badge-secondary">Admin General</span>
+          <span class="badge badge-neutral">Supervisor</span>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;"><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;">Estados de usuario</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <span class="badge badge-success">Activo</span>
+          <span class="badge badge-danger">Inactivo</span>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;"><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;">Subsistemas online</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <span class="badge badge-success">Online</span>
+          <span class="badge badge-danger">Offline</span>
+          <span class="badge badge-warning">Lento</span>
+          <span class="badge badge-neutral">Mantenimiento</span>
+        </div>
+      </div>
+      <div><div style="font-size:9px;color:#64748B;margin-bottom:6px;text-transform:uppercase;">Sistemas embebidos</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <span class="badge badge-primary">Contabilidad</span>
+          <span class="badge badge-primary">RRHH</span>
+          <span class="badge badge-primary">Ventas</span>
+          <span class="badge badge-primary">Logística</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-card" style="margin-bottom:20px;">
+    <div class="comp-title">Inputs, Selects &amp; Chip-Checkboxes</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="input-group"><div class="input-label">Nombre completo</div><input class="inp" value="Diego Sullcarayra"><div class="inp-helper">Campo estándar con valor</div></div>
+      <div class="input-group"><div class="input-label">Email</div><input class="inp inp-error" value="diego@"><div class="inp-helper err">Email inválido</div></div>
+      <div class="input-group"><div class="input-label">Rol</div><select class="inp"><option>Admin Sistema</option><option>Admin General</option><option>Supervisor</option></select></div>
+    </div>
+    <div><div class="input-label" style="margin-bottom:8px;">Subsistemas habilitados — chip-checkbox</div>
+      <div class="chip-group">
+        <div class="chip-check checked">Contabilidad</div>
+        <div class="chip-check checked">RRHH</div>
+        <div class="chip-check">Ventas</div>
+        <div class="chip-check">Logística</div>
+        <div class="chip-check">Tesorería</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-card">
+    <div class="comp-title">Data Table — Usuarios (PrimeNG Table)</div>
+    <div style="border-radius:8px;overflow:hidden;border:1px solid rgba(29,57,110,0.08);">
+      <table class="data-table" style="background:#fff;">
+        <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Subsistemas</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:500;">Diego Sullcarayra</td><td style="color:#5A6A85;">diego@confianza.pe</td><td><span class="badge badge-primary" style="font-size:9px;">Admin Sistema</span></td><td><span class="badge badge-neutral" style="font-size:9px;">Todos</span></td><td><span class="badge badge-success" style="font-size:9px;">Activo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+          <tr><td style="font-weight:500;">Ana López</td><td style="color:#5A6A85;">ana@confianza.pe</td><td><span class="badge badge-neutral" style="font-size:9px;">Supervisor</span></td><td><span class="badge badge-primary" style="font-size:9px;">RRHH</span></td><td><span class="badge badge-success" style="font-size:9px;">Activo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td></tr>
+          <tr><td style="font-weight:500;">Carlos Mendoza</td><td style="color:#5A6A85;">carlos@confianza.pe</td><td><span class="badge badge-secondary" style="font-size:9px;">Admin General</span></td><td style="display:flex;gap:3px;flex-wrap:wrap;"><span class="badge badge-primary" style="font-size:9px;">Conta.</span><span class="badge badge-primary" style="font-size:9px;">RRHH</span></td><td><span class="badge badge-danger" style="font-size:9px;">Inactivo</span></td><td><button class="btn btn-ghost btn-sm" style="font-size:10px;color:#22C55E;">Reactivar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:10px;color:#94A3B8;">
+      <div>Mostrando 1-3 de 24 usuarios</div>
+      <div style="display:flex;gap:3px;">
+        <button class="btn btn-ghost btn-sm" style="font-size:10px;">← Ant</button>
+        <button class="btn btn-primary btn-sm" style="font-size:10px;">1</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px;">2</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px;">3</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px;">Sig →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     06 · MENSAJES
+════════════════════════════════════════════════════ -->
+<section class="section" id="messages">
+  <div class="section-label">06 · Mensajes del Sistema</div>
+  <h2 class="section-title">Mensajes, Alertas &amp; Diálogos</h2>
+  <p class="section-desc">Alertas inline (4 variantes), diálogos de confirmación, empty state y pantalla de acceso denegado. Sin emojis — iconos SVG.</p>
+
+  <div class="grid grid-2" style="margin-bottom:20px;">
+    <div class="comp-card">
+      <div class="comp-title">Alertas Inline — 4 Variantes</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="inline-alert alert-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div><strong>Información:</strong> Los cambios en roles afectan la próxima sesión del usuario.</div>
+        </div>
+        <div class="inline-alert alert-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><strong>Éxito:</strong> El usuario fue creado y se envió el correo de activación.</div>
+        </div>
+        <div class="inline-alert alert-warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>Advertencia:</strong> Este rol tiene 3 usuarios. Modificar afectará a todos.</div>
+        </div>
+        <div class="inline-alert alert-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div><strong>Error:</strong> No se pudo conectar con el servidor. Intente nuevamente.</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-title">Diálogos de Confirmación</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="background:#F4F6F9;border-radius:10px;padding:16px;display:flex;align-items:center;justify-content:center;">
+          <div class="dialog" style="max-width:100%;">
+            <div class="dialog-icon" style="background:#FEE2E2;"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+            <div class="dialog-title">Eliminar usuario</div>
+            <div class="dialog-msg">¿Eliminar a <strong>Ana López</strong>? Esta acción no puede deshacerse.</div>
+            <div class="dialog-actions"><button class="btn btn-ghost">Cancelar</button><button class="btn btn-danger">Eliminar</button></div>
+          </div>
+        </div>
+        <div style="background:#F4F6F9;border-radius:10px;padding:16px;display:flex;align-items:center;justify-content:center;">
+          <div class="dialog" style="max-width:100%;">
+            <div class="dialog-icon" style="background:rgba(29,57,110,0.08);"><svg viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div class="dialog-title">Desactivar acceso</div>
+            <div class="dialog-msg">Desactivar a <strong>Carlos Mendoza</strong> impedirá el inicio de sesión. Sus datos se conservan.</div>
+            <div class="dialog-actions"><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Desactivar</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="comp-card">
+      <div class="comp-title">Access Denied — 403</div>
+      <div style="background:#F4F6F9;border-radius:10px;overflow:hidden;">
+        <div class="center-box" style="min-height:200px;">
+          <div class="state-icon" style="background:rgba(29,57,110,0.08);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#1D396E;">Acceso no autorizado</div>
+          <div style="font-size:12px;color:#5A6A85;max-width:260px;line-height:1.5;">No tienes permisos para esta sección. Se requiere rol <strong>Admin Sistema</strong>.</div>
+          <button class="btn btn-ghost btn-sm">← Volver al Dashboard</button>
+        </div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-title">Empty State — Sin resultados</div>
+      <div style="background:#F4F6F9;border-radius:10px;overflow:hidden;">
+        <div class="center-box" style="min-height:200px;">
+          <div class="state-icon" style="background:rgba(29,57,110,0.06);opacity:.5;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#1D396E;">Sin catálogos aún</div>
+          <div style="font-size:12px;color:#5A6A85;max-width:260px;line-height:1.5;">No hay catálogos registrados. Crea el primer catálogo para comenzar.</div>
+          <button class="btn btn-primary btn-sm">+ Crear catálogo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     07 · NOTIFICACIONES
+════════════════════════════════════════════════════ -->
+<section class="section" id="notifications">
+  <div class="section-label">07 · Notificaciones</div>
+  <h2 class="section-title">Sistema de Notificaciones</h2>
+  <p class="section-desc">Toast notifications (4 variantes) + Panel in-app con leído/no leído. Iconos SVG en lugar de emojis.</p>
+
+  <div class="grid grid-2" style="margin-bottom:20px;">
+    <div class="comp-card">
+      <div class="comp-title">Toast Notifications — 4 Variantes</div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:12px;background:#F4F6F9;border-radius:10px;">
+        <div class="toast toast-success">
+          <div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="toast-body"><div class="toast-title">Usuario creado exitosamente</div><div class="toast-msg">Ana López registrada con rol Supervisor de Área.</div><div class="toast-action">Ver detalle →</div></div>
+          <div class="toast-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        </div>
+        <div class="toast toast-error">
+          <div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+          <div class="toast-body"><div class="toast-title">Error al guardar</div><div class="toast-msg">Sin conexión con el servidor. Intenta nuevamente.</div><div class="toast-action">Reintentar →</div></div>
+          <div class="toast-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        </div>
+        <div class="toast toast-warning">
+          <div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="toast-body"><div class="toast-title">Acceso denegado</div><div class="toast-msg">No tienes permisos para Gestión de Accesos.</div></div>
+          <div class="toast-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        </div>
+        <div class="toast toast-info">
+          <div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="toast-body"><div class="toast-title">Subsistema conectado</div><div class="toast-msg">Remote Contabilidad disponible · localhost:4201</div></div>
+          <div class="toast-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-title">Panel de Notificaciones In-App</div>
+      <div style="display:flex;justify-content:center;">
+        <div class="notif-panel">
+          <div class="notif-header">
+            <div class="notif-header-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notificaciones <span class="badge badge-danger" style="font-size:9px;margin-left:2px;">3</span>
+            </div>
+            <div style="font-size:11px;color:#42ADE0;cursor:pointer;font-weight:500;">Marcar leído</div>
+          </div>
+          <div class="notif-item unread"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text"><strong>Diego S.</strong> creó el usuario <strong>Ana López</strong></div><div class="notif-meta">Gestión de Accesos · hace 5 min</div></div></div>
+          <div class="notif-item unread"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text">Remote <strong>Contabilidad</strong> reconectado tras timeout</div><div class="notif-meta">Sistema · hace 18 min</div></div></div>
+          <div class="notif-item unread"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text">Rol <strong>Supervisor Ventas</strong> modificado — 3 usuarios afectados</div><div class="notif-meta">Roles · hace 1h</div></div></div>
+          <div class="notif-item"><div class="notif-dot read"></div><div class="notif-body"><div class="notif-text">Catálogo <strong>Departamentos</strong> actualizado (26 ítems)</div><div class="notif-meta">Catálogos · hace 3h</div></div></div>
+          <div class="notif-item"><div class="notif-dot read"></div><div class="notif-body"><div class="notif-text">Usuario <strong>Carlos Mendoza</strong> desactivado</div><div class="notif-meta">Usuarios · ayer 14:30</div></div></div>
+          <div class="notif-footer">Ver todas las notificaciones</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     08 · ESTADOS ASÍNCRONOS
+════════════════════════════════════════════════════ -->
+<section class="section" id="states">
+  <div class="section-label">08 · Estados Asíncronos</div>
+  <h2 class="section-title">Estados de UI — Skeletons &amp; Error</h2>
+  <p class="section-desc">@defer blocks de Angular: RemoteSkeletonComponent (carga), ListSkeletonComponent (lista), RemoteErrorComponent (fallo), InlineErrorComponent (API).</p>
+
+  <div class="grid grid-3">
+    <div class="comp-card">
+      <div class="comp-title">RemoteSkeleton — Cargando Remote</div>
+      <div style="background:#F4F6F9;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;">
+        <div class="skeleton" style="height:13px;width:45%;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+          <div style="background:#fff;border-radius:8px;padding:8px;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
+          <div style="background:#fff;border-radius:8px;padding:8px;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
+          <div style="background:#fff;border-radius:8px;padding:8px;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:18px;width:60%;"></div></div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:10px;"><div class="skeleton" style="height:9px;margin-bottom:6px;"></div><div class="skeleton" style="height:9px;width:80%;margin-bottom:6px;"></div><div class="skeleton" style="height:9px;width:65%;"></div></div>
+        <div style="background:#fff;border-radius:8px;padding:10px;"><div class="skeleton" style="height:9px;margin-bottom:6px;"></div><div class="skeleton" style="height:9px;width:90%;"></div></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-title">ListSkeleton — Tabla cargando</div>
+      <div style="background:#fff;border-radius:10px;overflow:hidden;border:1px solid rgba(29,57,110,0.08);">
+        <div style="padding:8px 12px;background:#F8FAFC;border-bottom:1px solid rgba(29,57,110,0.06);display:grid;grid-template-columns:2fr 1fr 1fr 60px;gap:8px;">
+          <div class="skeleton" style="height:10px;"></div><div class="skeleton" style="height:10px;"></div><div class="skeleton" style="height:10px;"></div><div class="skeleton" style="height:10px;"></div>
+        </div>
+        <div style="padding:9px 12px;border-bottom:1px solid rgba(29,57,110,0.04);display:grid;grid-template-columns:2fr 1fr 1fr 60px;gap:8px;align-items:center;"><div class="skeleton" style="height:11px;width:70%;"></div><div class="skeleton" style="height:11px;"></div><div class="skeleton" style="height:16px;border-radius:99px;width:55%;"></div><div class="skeleton" style="height:22px;border-radius:6px;"></div></div>
+        <div style="padding:9px 12px;border-bottom:1px solid rgba(29,57,110,0.04);display:grid;grid-template-columns:2fr 1fr 1fr 60px;gap:8px;align-items:center;"><div class="skeleton" style="height:11px;width:55%;"></div><div class="skeleton" style="height:11px;"></div><div class="skeleton" style="height:16px;border-radius:99px;width:55%;"></div><div class="skeleton" style="height:22px;border-radius:6px;"></div></div>
+        <div style="padding:9px 12px;display:grid;grid-template-columns:2fr 1fr 1fr 60px;gap:8px;align-items:center;"><div class="skeleton" style="height:11px;width:80%;"></div><div class="skeleton" style="height:11px;"></div><div class="skeleton" style="height:16px;border-radius:99px;width:55%;"></div><div class="skeleton" style="height:22px;border-radius:6px;"></div></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-title">RemoteError — Subsistema caído</div>
+      <div style="background:#F4F6F9;border-radius:10px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;">
+        <div class="state-icon" style="background:rgba(239,68,68,0.08);opacity:.6;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:#1D396E;">Contabilidad no disponible</div>
+        <div style="font-size:12px;color:#5A6A85;line-height:1.5;">No se pudo conectar con el subsistema. El servicio puede estar en mantenimiento.</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm">Reintentar</button>
+          <button class="btn btn-ghost btn-sm">← Dashboard</button>
+        </div>
+        <div style="font-size:9px;color:#94A3B8;font-family:'Fira Code',monospace;">localhost:4201 · timeout 30s</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     09 · IAM
+════════════════════════════════════════════════════ -->
+<section class="section" id="iam">
+  <div class="section-label">09 · Módulo IAM</div>
+  <h2 class="section-title">Gestión de Accesos (IAM)</h2>
+  <p class="section-desc">Exclusivo Admin Sistema. Dashboard IAM con KPIs + estado de subsistemas. CRUD de Usuarios y Roles con asignación de permisos.</p>
+
+  <div class="grid grid-2">
+    <!-- IAM-01 -->
+    <div class="frame-wrapper">
+      <div class="frame-label">IAM-01</div>
+      <div class="frame-title">AccesosShellComponent — Dashboard IAM</div>
+      <div class="frame">
+        <div class="frame-chrome"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url-bar">localhost:4200/admin/accesos</div></div>
+        <div class="app-shell">
+          <div class="app-col1">
+            <div class="col1-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <div class="col1-sep"></div>
+            <div class="sb-icon active"><div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="sb-lbl">Inicio</div></div>
+            <div class="sb-icon"><div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div><div class="sb-lbl">Conta.</div></div>
+            <div class="col1-spacer"></div>
+          </div>
+          <div class="app-col2">
+            <div class="nav-panel-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><div class="ph-title">Sistema Principal</div></div>
+            <div class="nav-section">
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Catálogos</div>
+            </div>
+            <div class="nav-section">
+              <div class="nav-section-title">Accesos [Admin]</div>
+              <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Panel IAM</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Usuarios</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg> Roles</div>
+            </div>
+          </div>
+          <div class="app-main">
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div><div class="header-sep"></div>
+              <div class="header-breadcrumb">Gestión de Accesos</div>
+              <div class="header-user-btn"><div class="avatar-sm">DS</div><div class="header-user-name">DS</div><div class="header-user-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div></div>
+            </div>
+            <div class="app-content">
+              <div style="font-size:12px;font-weight:700;color:#1D396E;margin-bottom:12px;">Panel IAM</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+                <div class="kpi-card"><div><div class="kpi-label">Usuarios activos</div><div class="kpi-value">21</div><div class="kpi-change">+3</div></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Roles</div><div class="kpi-value">5</div><div class="kpi-change" style="color:#94A3B8;">—</div></div></div>
+                <div class="kpi-card"><div><div class="kpi-label">Remotes</div><div class="kpi-value">4</div><div class="kpi-change">+1</div></div></div>
+              </div>
+              <div style="background:#fff;border-radius:8px;padding:10px;border:1px solid rgba(29,57,110,0.06);">
+                <div style="font-size:9.5px;color:#94A3B8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px;">Estado subsistemas</div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);"><span>Contabilidad</span><span class="badge badge-success" style="font-size:8px;">Online</span></div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);"><span>RRHH</span><span class="badge badge-success" style="font-size:8px;">Online</span></div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);"><span>Ventas</span><span class="badge badge-warning" style="font-size:8px;">Lento</span></div>
+                <div style="font-size:10px;color:#5A6A85;display:flex;justify-content:space-between;padding:4px 0;"><span>Logística</span><span class="badge badge-danger" style="font-size:8px;">Offline</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IAM-02 -->
+    <div class="frame-wrapper">
+      <div class="frame-label">IAM-02</div>
+      <div class="frame-title">UsuarioFormComponent — Crear Usuario</div>
+      <div class="frame">
+        <div class="frame-chrome"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url-bar">localhost:4200/admin/accesos/usuarios/nuevo</div></div>
+        <div class="app-shell">
+          <div class="app-col1">
+            <div class="col1-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <div class="col1-sep"></div>
+            <div class="sb-icon active"><div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="sb-lbl">Inicio</div></div>
+            <div class="col1-spacer"></div>
+          </div>
+          <div class="app-col2">
+            <div class="nav-panel-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><div class="ph-title">Sistema Principal</div></div>
+            <div class="nav-section">
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Catálogos</div>
+              <div class="nav-section-title">Accesos</div>
+              <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Usuarios</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg> Roles</div>
+            </div>
+          </div>
+          <div class="app-main">
+            <div class="app-header">
+              <div class="header-wordmark">MIS</div><div class="header-sep"></div>
+              <div class="header-breadcrumb">Nuevo Usuario</div>
+              <div class="header-user-btn"><div class="avatar-sm">DS</div><div class="header-user-name">DS</div><div class="header-user-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div></div>
+            </div>
+            <div class="app-content">
+              <div class="form-panel" style="padding:14px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                  <div class="input-group"><div class="input-label">Nombre</div><input class="inp" placeholder="Nombre completo" style="height:30px;font-size:11px;"></div>
+                  <div class="input-group"><div class="input-label">Email</div><input class="inp" placeholder="user@confianza.pe" style="height:30px;font-size:11px;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                  <div class="input-group"><div class="input-label">Contraseña</div><input class="inp" placeholder="••••••••" type="password" style="height:30px;font-size:11px;"></div>
+                  <div class="input-group"><div class="input-label">Rol</div><select class="inp" style="height:30px;font-size:11px;"><option>Admin Sistema</option><option>Admin General</option><option>Supervisor</option></select></div>
+                </div>
+                <div class="input-group"><div class="input-label">Subsistemas habilitados</div>
+                  <div class="chip-group" style="margin-top:6px;">
+                    <div class="chip-check checked" style="font-size:10px;">Contabilidad</div>
+                    <div class="chip-check" style="font-size:10px;">RRHH</div>
+                    <div class="chip-check" style="font-size:10px;">Ventas</div>
+                    <div class="chip-check" style="font-size:10px;">Logística</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+                  <button class="btn btn-ghost btn-sm">Cancelar</button>
+                  <button class="btn btn-primary btn-sm">Crear usuario</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     10 · SISTEMAS EMBEBIDOS
+════════════════════════════════════════════════════ -->
+<section class="section" id="remotes">
+  <div class="section-label">10 · Native Federation</div>
+  <h2 class="section-title">Interacción con Sistemas Embebidos</h2>
+  <p class="section-desc">Flujo completo de carga de Remote, contrato de comunicación Host↔Remote mediante Signals de solo lectura, y los 3 estados del RemoteWrapperComponent.</p>
+
+  <div class="comp-card" style="margin-bottom:20px;">
+    <div class="comp-title">Flujo de Carga — Remote via loadRemoteModule()</div>
+    <div style="display:flex;gap:12px;align-items:flex-start;overflow-x:auto;padding:4px 0 8px;">
+      <div style="flex-shrink:0;width:150px;text-align:center;">
+        <div style="background:#fff;border-radius:10px;padding:12px;border:2px solid rgba(29,57,110,0.1);">
+          <div style="width:32px;height:32px;margin:0 auto 6px;border-radius:8px;background:rgba(29,57,110,0.08);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D396E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <div style="font-size:11px;font-weight:600;color:#1D396E;margin-bottom:3px;">1. Click ícono</div>
+          <div style="font-size:9px;color:#94A3B8;">Col1 · ícono Remote activo</div>
+        </div>
+        <div style="font-size:16px;color:#42ADE0;margin-top:8px;">→</div>
+      </div>
+      <div style="flex-shrink:0;width:150px;text-align:center;">
+        <div style="background:#fff;border-radius:10px;padding:12px;border:2px solid rgba(66,173,224,0.3);">
+          <div style="width:32px;height:32px;margin:0 auto 6px;border-radius:8px;background:rgba(66,173,224,0.1);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div style="font-size:11px;font-weight:600;color:#1D396E;margin-bottom:3px;">2. @defer Skeleton</div>
+          <div style="font-size:9px;color:#94A3B8;">RemoteSkeletonComponent</div>
+        </div>
+        <div style="font-size:16px;color:#42ADE0;margin-top:8px;">→</div>
+      </div>
+      <div style="flex-shrink:0;width:150px;text-align:center;">
+        <div style="background:#fff;border-radius:10px;padding:12px;border:2px solid rgba(66,173,224,0.3);">
+          <div style="width:32px;height:32px;margin:0 auto 6px;border-radius:8px;background:rgba(66,173,224,0.1);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#42ADE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div>
+          <div style="font-size:11px;font-weight:600;color:#1D396E;margin-bottom:3px;">3. loadRemoteModule</div>
+          <div style="font-size:9px;color:#94A3B8;">Descarga bundle Remote</div>
+        </div>
+        <div style="font-size:16px;color:#42ADE0;margin-top:8px;">→</div>
+      </div>
+      <div style="flex-shrink:0;width:150px;text-align:center;">
+        <div style="background:#fff;border-radius:10px;padding:12px;border:2px solid rgba(34,197,94,0.3);">
+          <div style="width:32px;height:32px;margin:0 auto 6px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div style="font-size:11px;font-weight:600;color:#22C55E;margin-bottom:3px;">4a. Remote activo</div>
+          <div style="font-size:9px;color:#94A3B8;">Componente inyectado</div>
+        </div>
+      </div>
+      <div style="flex-shrink:0;width:20px;display:flex;align-items:center;justify-content:center;color:#64748B;font-size:10px;">OR</div>
+      <div style="flex-shrink:0;width:150px;text-align:center;">
+        <div style="background:#fff;border-radius:10px;padding:12px;border:2px solid rgba(239,68,68,0.3);">
+          <div style="width:32px;height:32px;margin:0 auto 6px;border-radius:8px;background:rgba(239,68,68,0.08);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+          <div style="font-size:11px;font-weight:600;color:#EF4444;margin-bottom:3px;">4b. Error / Timeout</div>
+          <div style="font-size:9px;color:#94A3B8;">RemoteErrorComponent</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-card" style="margin-bottom:20px;">
+    <div class="comp-title">Contrato Host ↔ Remote — ShellStateService Signals</div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;">
+      <div style="background:#1D396E;border-radius:10px;padding:16px;color:#fff;">
+        <div style="font-size:12px;font-weight:700;color:#42ADE0;margin-bottom:10px;">HOST — MIS Shell</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;text-transform:uppercase;">Signals privados (SET aquí)</div>
+        <div style="font-family:'Fira Code',monospace;font-size:10px;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;line-height:1.7;color:#A5F3FC;">_usuarioActivo = signal(null)<br>_menuItemActivo = signal(null)<br>_catalogoActivo = signal(null)</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin:8px 0 5px;text-transform:uppercase;">Métodos exclusivos del Host</div>
+        <div style="font-family:'Fira Code',monospace;font-size:10px;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;line-height:1.7;color:#FCA5A5;">setUsuarioActivo(u: U)<br>setMenuItemActivo(m: M)<br>setCatalogoActivo(slug)</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:30px;">
+        <div style="font-size:10px;font-weight:700;color:#42ADE0;">READ-ONLY</div>
+        <div style="font-size:24px;color:#42ADE0;">→</div>
+        <div style="font-size:9px;color:#64748B;font-family:'Fira Code',monospace;">asReadonly()</div>
+      </div>
+      <div style="background:#0F4C75;border-radius:10px;padding:16px;color:#fff;">
+        <div style="font-size:12px;font-weight:700;color:#5BBDE8;margin-bottom:10px;">REMOTE — Subsistema</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;text-transform:uppercase;">inject(ShellStateService) — solo lectura</div>
+        <div style="font-family:'Fira Code',monospace;font-size:10px;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;line-height:1.7;color:#A5F3FC;">usuarioActivo() ← read<br>catalogoActivo() ← read<br>esAdmin() ← computed</div>
+        <div style="font-size:9px;color:rgba(239,68,68,0.7);margin:8px 0 5px;text-transform:uppercase;">PROHIBIDO</div>
+        <div style="font-family:'Fira Code',monospace;font-size:10px;background:rgba(239,68,68,0.08);padding:8px;border-radius:6px;line-height:1.7;color:#FCA5A5;">setUsuarioActivo() // Error<br>setCatalogoActivo() // Error</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-3">
+    <div class="frame-wrapper">
+      <div class="frame-label">Remote — Estado A</div>
+      <div class="frame-title">Cargando</div>
+      <div class="frame" style="height:180px;">
+        <div style="background:#F4F6F9;padding:14px;height:100%;display:flex;flex-direction:column;gap:8px;">
+          <div class="skeleton" style="height:12px;width:40%;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div style="background:#fff;border-radius:7px;padding:8px;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:16px;width:60%;"></div></div>
+            <div style="background:#fff;border-radius:7px;padding:8px;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:16px;width:60%;"></div></div>
+          </div>
+          <div style="background:#fff;border-radius:7px;padding:8px;flex:1;"><div class="skeleton" style="height:9px;margin-bottom:5px;"></div><div class="skeleton" style="height:9px;width:80%;"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="frame-wrapper">
+      <div class="frame-label">Remote — Estado B</div>
+      <div class="frame-title">Activo (contenido cargado)</div>
+      <div class="frame" style="height:180px;">
+        <div style="background:#F4F6F9;padding:14px;height:100%;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="font-size:11px;font-weight:700;color:#1D396E;">Dashboard Contabilidad</div>
+            <span style="font-size:8px;background:rgba(34,197,94,0.12);color:#166534;padding:1px 5px;border-radius:99px;font-weight:600;">LIVE</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div class="kpi-card"><div><div class="kpi-label">Ingresos</div><div class="kpi-value" style="font-size:16px;">S/148K</div></div></div>
+            <div class="kpi-card"><div><div class="kpi-label">Egresos</div><div class="kpi-value" style="font-size:16px;">S/92K</div></div></div>
+          </div>
+          <div style="background:#fff;border-radius:7px;padding:7px;font-size:9px;color:#5A6A85;border:1px solid rgba(29,57,110,0.06);">loadRemoteModule() — sin iframe · Native Federation</div>
+        </div>
+      </div>
+    </div>
+    <div class="frame-wrapper">
+      <div class="frame-label">Remote — Estado C</div>
+      <div class="frame-title">Error (caído)</div>
+      <div class="frame" style="height:180px;">
+        <div style="background:#F4F6F9;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center;">
+          <div class="state-icon" style="background:rgba(239,68,68,0.07);opacity:.7;"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+          <div style="font-size:12px;font-weight:600;color:#1D396E;">Contabilidad no disponible</div>
+          <div style="font-size:10px;color:#5A6A85;line-height:1.4;">Error · localhost:4201</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-primary btn-sm" style="font-size:9px;">Reintentar</button>
+            <button class="btn btn-ghost btn-sm" style="font-size:9px;">← Dashboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:28px 48px;border-top:1px solid rgba(255,255,255,0.04);text-align:center;">
+  <div style="font-size:12px;color:#475569;">
+    <strong style="color:#42ADE0;">MIS · UX Figma Kit v3.0</strong> — Financiera Confianza · Management Information System<br>
+    <span style="font-size:10px;color:#334155;margin-top:4px;display:block;">Angular 22 · PrimeNG 19+ · Tailwind CSS v4 · Native Federation · Zoneless · Design System macOS · Figma Ready</span>
+    <span style="font-size:10px;color:#334155;display:block;margin-top:2px;">Sidebar: solo íconos de sistemas — Perfil &amp; Cerrar sesión en menú de usuario del header</span>
+  </div>
+</footer>
+
+<script>
+  const navLinks = document.querySelectorAll('.kit-nav a');
+  const sections = document.querySelectorAll('section[id]');
+  navLinks.forEach(l => l.addEventListener('click', () => {
+    navLinks.forEach(x => x.classList.remove('active'));
+    l.classList.add('active');
+  }));
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

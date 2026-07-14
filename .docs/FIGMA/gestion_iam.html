@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIS · Módulo de Accesos y Seguridad (IAM) — Figma Frames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --mis-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    --mis-primary:          #1D396E;
+    --mis-primary-hover:    #162D58;
+    --mis-primary-light:    #E8EDF5;
+    --mis-secondary:        #42ADE0;
+    --mis-secondary-hover:  #2F9FD4;
+    --mis-secondary-light:  #E8F6FC;
+    --mis-accent:           #42ADE0;
+    --mis-bg:               #F4F6F9;
+    --mis-surface:          #FFFFFF;
+    --mis-sidebar-bg:       #1D396E;
+    --mis-panel-bg:         #F8FAFC;
+    --mis-border:           rgba(29,57,110,0.08);
+    --mis-border-strong:    rgba(29,57,110,0.18);
+    --mis-text-primary:     #1D396E;
+    --mis-text-secondary:   #5A6A85;
+    --mis-text-tertiary:    #94A3B8;
+    --mis-text-inverse:     #FFFFFF;
+    --mis-success:          #16A34A;
+    --mis-success-light:    #E7F6EC;
+    --mis-success-text:     #14532D;
+    --mis-warning:          #B45309;
+    --mis-warning-light:    #FEF3C7;
+    --mis-warning-text:     #78350F;
+    --mis-danger:           #DC2626;
+    --mis-danger-light:     #FDECEC;
+    --mis-danger-text:      #7F1D1D;
+    --mis-shadow-sm:    0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --mis-shadow-md:    0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --mis-shadow-lg:    0 8px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+    --mis-shadow-xl:    0 16px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.08);
+    --mis-shadow-focus: 0 0 0 3px rgba(66, 173, 224, 0.35);
+    --mis-radius-xs: 4px;
+    --mis-radius-sm: 6px;
+    --mis-radius-md: 10px;
+    --mis-radius-lg: 14px;
+    --mis-radius-xl: 20px;
+  }
+
+  body {
+    font-family: var(--mis-font-family);
+    background: #0B0F19;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .window-frame {
+    background: var(--mis-bg);
+    border-radius: var(--mis-radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    height: 590px;
+    width: 100%;
+    max-width: 1240px;
+    position: relative;
+  }
+
+  .frame-chrome {
+    background: #E5E9EF;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 6px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #FF5F57; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+  .dot.y { background: #FFBD2E; box-shadow: inset 0 0 0.5px rgba(0,0,0,0.1); }
+  .dot.g { background: #28C840; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+  .url-bar {
+    margin-left: 10px;
+    font-size: 10.5px;
+    color: #6B7280;
+    font-family: 'Fira Code', monospace;
+    background: rgba(255,255,255,0.7);
+    padding: 3px 10px;
+    border-radius: var(--mis-radius-sm);
+    flex: 1;
+    max-width: 420px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .app-shell {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .app-sidebar-col1 {
+    width: 56px;
+    background: var(--mis-sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .col1-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: rgba(66,173,224,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    box-shadow: 0 0 0 1px rgba(66,173,224,0.3);
+  }
+  .col1-logo svg {
+    color: var(--mis-secondary);
+    width: 18px;
+    height: 18px;
+  }
+  .col1-sep {
+    width: 24px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 4px 0 8px 0;
+  }
+  
+  .sb-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 3px;
+    position: relative;
+  }
+  .sb-icon .sb-ico svg {
+    color: rgba(255,255,255,0.5);
+    width: 18px;
+    height: 18px;
+  }
+  .sb-icon .sb-lbl {
+    font-size: 8px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+  }
+  .sb-icon.active {
+    background: rgba(66,173,224,0.22);
+    box-shadow: 0 0 0 1px rgba(66,173,224,0.3);
+  }
+  .sb-icon.active .sb-ico svg { color: var(--mis-secondary); }
+  .sb-icon.active .sb-lbl { color: var(--mis-secondary); }
+  .sb-icon.active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: var(--mis-secondary);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .app-sidebar-col2 {
+    width: 220px;
+    background: var(--mis-panel-bg);
+    border-right: 1px solid var(--mis-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .nav-panel-header {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--mis-border);
+  }
+  .nav-panel-header svg {
+    width: 14px;
+    height: 14px;
+    color: var(--mis-text-secondary);
+  }
+  .nav-panel-header .ph-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--mis-text-primary);
+  }
+  .nav-section { padding: 6px 0; }
+  .nav-section-title {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--mis-text-tertiary);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 8px 16px 4px;
+    font-family: 'Fira Code', monospace;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: var(--mis-text-secondary);
+    cursor: pointer;
+    border-right: 2.5px solid transparent;
+  }
+  .nav-item svg {
+    width: 13px;
+    height: 13px;
+    color: var(--mis-text-tertiary);
+  }
+  .nav-item.active {
+    background: rgba(66,173,224,0.08);
+    color: var(--mis-primary);
+    font-weight: 600;
+    border-right-color: var(--mis-accent);
+  }
+  .nav-item.active svg { color: var(--mis-accent); }
+
+  .app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .app-header {
+    height: 44px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--mis-border);
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .header-wordmark {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mis-primary);
+  }
+  .header-sep {
+    width: 1px;
+    height: 14px;
+    background: var(--mis-border-strong);
+  }
+  .header-breadcrumb {
+    font-size: 12px;
+    color: var(--mis-text-secondary);
+    flex: 1;
+  }
+  .header-breadcrumb strong {
+    color: var(--mis-text-primary);
+    font-weight: 600;
+  }
+  .header-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: var(--mis-radius-sm);
+  }
+  .avatar-sm {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mis-primary), var(--mis-secondary));
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header-user-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mis-text-primary);
+  }
+
+  .app-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background: var(--mis-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* PrimeNG Card & Containers */
+  .card-contained {
+    background: #FFFFFF;
+    border: 1px solid var(--mis-border);
+    border-radius: var(--mis-radius-md);
+    overflow: hidden;
+    box-shadow: var(--mis-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  
+  .card-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--mis-border);
+    background: #F8FAFC;
+    flex-shrink: 0;
+  }
+  .card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-header-icon {
+    font-size: 14px;
+    color: var(--mis-primary);
+    display: flex;
+    align-items: center;
+  }
+  .card-header-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mis-primary);
+  }
+  .card-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* PrimeNG SelectButton component */
+  .p-selectbutton {
+    display: inline-flex;
+    background: #F1F5F9;
+    border-radius: var(--mis-radius-sm);
+    padding: 2px;
+    border: 1px solid var(--mis-border-strong);
+  }
+  .p-selectbutton-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mis-text-secondary);
+    border-radius: var(--mis-radius-xs);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+  }
+  .p-selectbutton-btn.active {
+    background: #FFFFFF;
+    color: var(--mis-primary);
+    box-shadow: var(--mis-shadow-sm);
+  }
+
+  /* Filters */
+  .filter-row-card {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 16px;
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--mis-border);
+    flex-shrink: 0;
+  }
+  .filter-inp-search {
+    height: 32px;
+    border: 1px solid var(--mis-border-strong);
+    border-radius: var(--mis-radius-sm);
+    padding: 0 10px 0 28px;
+    font-size: 11.5px;
+    color: var(--mis-text-primary);
+    outline: none;
+    width: 100%;
+    background: #FFFFFF;
+  }
+  .search-wrapper-relative {
+    position: relative;
+    flex: 1.5;
+  }
+  .search-icon-inside {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--mis-text-tertiary);
+  }
+
+  .filter-select-prime {
+    height: 32px;
+    border: 1px solid var(--mis-border-strong);
+    border-radius: var(--mis-radius-sm);
+    padding: 0 8px;
+    font-size: 11px;
+    color: var(--mis-text-secondary);
+    outline: none;
+    background: #FFFFFF;
+    min-width: 140px;
+  }
+
+  .badge {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+  .badge.success { background: var(--mis-success-light); color: var(--mis-success); }
+  .badge.warning { background: var(--mis-warning-light); color: var(--mis-warning); }
+  .badge.danger  { background: var(--mis-danger-light); color: var(--mis-danger); }
+  .badge.info    { background: var(--mis-secondary-light); color: #1E6FA0; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 9.5px;
+    font-weight: 700;
+  }
+  .status-badge.live {
+    background: var(--mis-success-light);
+    color: var(--mis-success);
+    border: 1px solid rgba(22, 163, 74, 0.2);
+  }
+
+  .sys-badge-list {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+  }
+  .sys-pill {
+    font-size: 8px;
+    background: rgba(29,57,110,0.06);
+    color: var(--mis-primary);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Fira Code', monospace;
+    border: 1px solid rgba(29,57,110,0.08);
+  }
+
+  /* Table styling */
+  .table-container-scroll {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .data-table-prime {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+  }
+  .data-table-prime th {
+    background: #F8FAFC;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--mis-text-tertiary);
+    border-bottom: 1px solid var(--mis-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .data-table-prime td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(29,57,110,0.05);
+    color: var(--mis-text-primary);
+    vertical-align: middle;
+  }
+
+  .switch-toggle {
+    position: relative;
+    display: inline-block;
+    width: 28px;
+    height: 16px;
+  }
+  .switch-toggle input { display: none; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #E2E8F0;
+    transition: .2s;
+    border-radius: 99px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 12px; width: 12px;
+    left: 2px; bottom: 2px;
+    background-color: white;
+    transition: .2s;
+    border-radius: 50%;
+  }
+  input:checked + .slider { background-color: var(--mis-success); }
+  input:checked + .slider:before { transform: translateX(12px); }
+
+  .form-group-iam {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .form-lbl-iam {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--mis-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Fira Code', monospace;
+  }
+  .form-inp-iam {
+    height: 30px;
+    border: 1px solid var(--mis-border-strong);
+    border-radius: var(--mis-radius-sm);
+    padding: 0 8px;
+    font-size: 11.5px;
+    color: var(--mis-text-primary);
+    outline: none;
+    width: 100%;
+  }
+  .form-inp-iam:focus {
+    border-color: var(--mis-secondary);
+  }
+  .form-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #F8FAFC;
+    padding: 6px;
+    border-radius: var(--mis-radius-sm);
+    border: 1px solid var(--mis-border);
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: var(--mis-text-primary);
+  }
+
+  /* Table action buttons */
+  .table-action-btn {
+    border: none;
+    background: none;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: var(--mis-radius-xs);
+  }
+  .table-action-btn.edit {
+    color: var(--mis-secondary);
+  }
+  .table-action-btn.edit:hover {
+    background: var(--mis-secondary-light);
+  }
+  .table-action-btn.delete {
+    color: var(--mis-danger);
+  }
+  .table-action-btn.delete:hover {
+    background: var(--mis-danger-light);
+  }
+
+  /* Detail Edit Layout */
+  .detail-centered-container {
+    display: flex;
+    justify-content: center;
+    padding: 16px 24px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  .detail-section-fullwidth {
+    background: #F8FAFC;
+    border: 1px solid var(--mis-border-strong);
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 680px;
+    align-self: flex-start;
+  }
+  .detail-section-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--mis-primary);
+    border-bottom: 1px solid var(--mis-border);
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Fira Code', monospace;
+  }
+  .form-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  /* Elemento-Resumen Matrix Layout */
+  .role-resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 4px 0;
+  }
+  .role-resumen-card {
+    background: #FFFFFF;
+    border: 1px solid var(--mis-border-strong);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--mis-shadow-sm);
+  }
+  .role-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--mis-border);
+  }
+  .role-card-header-icon {
+    font-size: 12px;
+    color: var(--mis-primary);
+    display: flex;
+    align-items: center;
+  }
+  .role-card-header-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .role-sistema-nombre {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--mis-text-primary);
+  }
+  .role-sistema-codigo {
+    font-size: 9px;
+    color: var(--mis-text-tertiary);
+    font-family: 'Fira Code', monospace;
+  }
+  .role-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 12px;
+    background: #FFFFFF;
+  }
+  .role-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .role-stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--mis-primary);
+  }
+  .role-stat-label {
+    font-size: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .role-stat--create .role-stat-label { color: #16A34A; }
+  .role-stat--read .role-stat-label { color: #2563EB; }
+  .role-stat--update .role-stat-label { color: #D97706; }
+  .role-stat--delete .role-stat-label { color: #DC2626; }
+  
+  .role-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border-top: 1px solid var(--mis-border);
+    margin-top: auto;
+  }
+  .role-total-text {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--mis-text-secondary);
+  }
+  .role-btn-view {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--mis-secondary);
+    cursor: pointer;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .breadcrumb-nav-role {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--mis-text-tertiary);
+  }
+  .breadcrumb-nav-role .active {
+    color: var(--mis-text-secondary);
+    font-weight: 600;
+  }
+
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .sys-card {
+    background: #FFFFFF;
+    border: 1px solid var(--mis-border);
+    border-radius: var(--mis-radius-md);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    box-shadow: var(--mis-shadow-sm);
+  }
+
+  .btn-action {
+    height: 30px;
+    background: var(--mis-primary);
+    color: #FFFFFF;
+    border: none;
+    padding: 0 12px;
+    border-radius: var(--mis-radius-sm);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-action:hover {
+    background: var(--mis-primary-hover);
+  }
+
+  /* KPIs styling */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .kpi-card {
+    background: #FFFFFF;
+    border: 1px solid var(--mis-border);
+    border-radius: var(--mis-radius-md);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--mis-shadow-sm);
+  }
+  .kpi-info { display: flex; flex-direction: column; }
+  .kpi-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--mis-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .kpi-val {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--mis-text-primary);
+  }
+  .kpi-ico-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--mis-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kpi-ico-wrap svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .table-card {
+    background: #FFFFFF;
+    border: 1px solid var(--mis-border);
+    border-radius: var(--mis-radius-md);
+    overflow: hidden;
+    box-shadow: var(--mis-shadow-sm);
+  }
+  .table-header-box {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--mis-border);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--mis-text-primary);
+  }
+  .grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+  }
+  .grid-table th {
+    background: #F8FAFC;
+    padding: 8px 16px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--mis-text-tertiary);
+    border-bottom: 1px solid var(--mis-border);
+  }
+  .grid-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(29,57,110,0.04);
+    color: var(--mis-text-primary);
+  }
+</style>
+</head>
+<body>
+
+  <!-- VISTA 1: MI ESPACIO (HOST DASHBOARD) -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/dashboard</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="click-indicator" style="top: 8px; left: 8px;"></div>
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Host / <strong>Mi espacio</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-info"><span class="kpi-lbl">Sistemas</span><span class="kpi-val">4 Activos</span></div><div class="kpi-ico-wrap" style="background:#E8F6FC;color:#42ADE0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div></div>
+            <div class="kpi-card"><div class="kpi-info"><span class="kpi-lbl">Usuarios</span><span class="kpi-val">24</span></div><div class="kpi-ico-wrap" style="background:#E8EDF5;color:#1D396E;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div></div>
+            <div class="kpi-card"><div class="kpi-info"><span class="kpi-lbl">Roles</span><span class="kpi-val">5</span></div><div class="kpi-ico-wrap" style="background:rgba(245,158,11,0.1);color:#B45309;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></div></div>
+            <div class="kpi-card"><div class="kpi-info"><span class="kpi-lbl">Servidores</span><span class="kpi-val">Dokploy</span></div><div class="kpi-ico-wrap" style="background:#E7F6EC;color:#16A34A;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/></svg></div></div>
+          </div>
+          <div class="table-card">
+            <div class="table-header-box">Estado de Microfrontends Remotos</div>
+            <table class="grid-table">
+              <thead><tr><th>Slug</th><th>Módulo / Remote</th><th>URL Manifest</th><th>Tiempo Respuesta</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>contabilidad</td><td>Contabilidad MFE</td><td><code>/contabilidad/remoteEntry.js</code></td><td>24ms</td><td><span class="status-badge live">ONLINE</span></td></tr>
+                <tr><td>rrhh</td><td>Recursos Humanos MFE</td><td><code>/rrhh/remoteEntry.js</code></td><td>42ms</td><td><span class="status-badge live">ONLINE</span></td></tr>
+                <tr><td>ventas</td><td>Módulo de Ventas</td><td><code>/ventas/remoteEntry.js</code></td><td>--</td><td><span class="status-badge error">OFFLINE</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 2: GESTIÓN DE USUARIOS -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/usuarios</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / <strong>Gestión de usuarios</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+                <span class="card-header-title">Gestión de usuarios</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action">+ Nuevo Usuario</button>
+              </div>
+            </div>
+
+            <div class="filter-row-card">
+              <div class="search-wrapper-relative">
+                <i class="pi pi-search search-icon-inside"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></i>
+                <input type="text" class="filter-inp-search" placeholder="Buscar por nombre o apellido..." value="Sullcarayra">
+              </div>
+              <select class="filter-select-prime"><option>Todos los sistemas</option></select>
+              <select class="filter-select-prime"><option>Todos los roles</option></select>
+              <select class="filter-select-prime"><option>Todos los estados</option><option>Activos</option><option>Inactivos</option></select>
+            </div>
+
+            <div class="table-container-scroll">
+              <table class="data-table-prime">
+                <thead>
+                  <tr>
+                    <th>Cód. Personal</th>
+                    <th>Documento</th>
+                    <th>Nombre Completo</th>
+                    <th>Email</th>
+                    <th>Puesto</th>
+                    <th>Unidad</th>
+                    <th>Roles</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background: rgba(66,173,224,0.04);">
+                    <td><code>920391</code></td>
+                    <td><b>72819022</b></td>
+                    <td><div style="font-weight:600;">Diego Sullcarayra</div></td>
+                    <td>diego@confianza.pe</td>
+                    <td>Líder de TI</td>
+                    <td>Sistemas</td>
+                    <td><div class="sys-badge-list"><span class="sys-pill">admin-sistema</span></div></td>
+                    <td>
+                      <label class="switch-toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                    <td style="position: relative;">
+                      <div class="click-indicator" style="top: 6px; left: 16px;"></div>
+                      <button class="table-action-btn edit">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        Editar
+                      </button>
+                      <button class="table-action-btn delete">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 3: DETALLE DE USUARIO - INFORMACIÓN GENERAL -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/usuarios/920391</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de usuarios / <strong>Detalle: Diego Sullcarayra</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+                <span class="card-header-title">Detalle de Usuario: Diego Sullcarayra</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn active">Información General</button>
+                <button class="p-selectbutton-btn">
+                  <div class="click-indicator" style="top: -6px; right: -12px;"></div>
+                  Roles y Sistemas
+                </button>
+              </div>
+            </div>
+
+            <div class="detail-centered-container">
+              <div class="detail-section-fullwidth">
+                <span class="detail-section-title">Información General</span>
+                <div class="form-grid-2col">
+                  <div class="form-group-iam">
+                    <label class="form-lbl-iam">Código Personal</label>
+                    <input type="text" class="form-inp-iam" value="920391" disabled style="background:#F1F5F9; color:var(--mis-text-secondary);">
+                  </div>
+                  <div class="form-group-iam">
+                    <label class="form-lbl-iam">Nro. Documento (DNI)</label>
+                    <input type="text" class="form-inp-iam" value="72819022">
+                  </div>
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Nombre Completo</label>
+                  <input type="text" class="form-inp-iam" value="Diego Sullcarayra">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Correo Electrónico (Trabajo)</label>
+                  <input type="email" class="form-inp-iam" value="diego@confianza.pe">
+                </div>
+                <div class="form-grid-2col">
+                  <div class="form-group-iam">
+                    <label class="form-lbl-iam">Puesto / Cargo</label>
+                    <input type="text" class="form-inp-iam" value="Líder de TI">
+                  </div>
+                  <div class="form-group-iam">
+                    <label class="form-lbl-iam">Unidad / Área</label>
+                    <input type="text" class="form-inp-iam" value="Sistemas">
+                  </div>
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Estado Laboral</label>
+                  <input type="text" class="form-inp-iam" value="ACTIVO" disabled style="background:#F1F5F9; color:var(--mis-text-secondary);">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 4: DETALLE DE USUARIO - ROLES Y SISTEMAS -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/usuarios/920391</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de usuarios / <strong>Detalle: Diego Sullcarayra</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+                <span class="card-header-title">Detalle de Usuario: Diego Sullcarayra</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn">Información General</button>
+                <button class="p-selectbutton-btn active">Roles y Sistemas</button>
+              </div>
+            </div>
+
+            <div class="detail-centered-container">
+              <div class="detail-section-fullwidth" style="max-width: 600px;">
+                <span class="detail-section-title">Roles y Sistemas Asignados</span>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Rol del Sistema</label>
+                  <select class="form-inp-iam" style="padding:0 6px;">
+                    <option selected>admin-sistema</option>
+                    <option>admin-general</option>
+                    <option>supervisor-ventas</option>
+                    <option>operador-rrhh</option>
+                  </select>
+                </div>
+                <div class="form-group-iam" style="margin-top: 8px;">
+                  <label class="form-lbl-iam">Sistemas Habilitados (MFEs)</label>
+                  <div class="form-checkbox-list" style="padding: 10px; gap: 8px;">
+                    <label class="checkbox-item"><input type="checkbox" checked> <b>Host Principal (MIS)</b></label>
+                    <label class="checkbox-item"><input type="checkbox" checked> Contabilidad MFE (remote)</label>
+                    <label class="checkbox-item"><input type="checkbox" checked> Recursos Humanos MFE (remote)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Módulo de Ventas (remote)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Logística MFE (remote)</label>
+                  </div>
+                </div>
+                <div class="form-group-iam" style="margin-top: 4px;">
+                  <label class="form-lbl-iam">Estado de Acceso</label>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                    <label class="switch-toggle">
+                      <input type="checkbox" checked>
+                      <span class="slider"></span>
+                    </label>
+                    <span style="font-size:11px; font-weight:600; color:var(--mis-success);">Usuario Habilitado</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 5: GESTIÓN DE ROLES -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/roles</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / <strong>Gestión de roles</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></span>
+                <span class="card-header-title">Roles y permisos corporativos</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary); font-size:10.5px;">Jerarquía</button>
+                <button class="btn-action">+ Nuevo Rol</button>
+              </div>
+            </div>
+            
+            <div class="table-container-scroll">
+              <table class="data-table-prime">
+                <thead>
+                  <tr>
+                    <th>Rol (Código)</th>
+                    <th>Descripción</th>
+                    <th>Nivel Jerárquico</th>
+                    <th>Usuarios Asignados</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background: rgba(66,173,224,0.04);">
+                    <td><b>admin-sistema</b></td>
+                    <td>Acceso total a la configuración global de seguridad e IAM.</td>
+                    <td><span class="badge danger">Nivel 1 (Super)</span></td>
+                    <td><span style="font-weight:700;">2 usuarios</span></td>
+                    <td style="position: relative;">
+                      <div class="click-indicator" style="top: 6px; left: 16px;"></div>
+                      <button class="table-action-btn edit">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        Editar
+                      </button>
+                      <button class="table-action-btn delete">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>admin-general</b></td>
+                    <td>Acceso operativo completo a los subsistemas asignados.</td>
+                    <td><span class="badge warning">Nivel 2 (Medio)</span></td>
+                    <td><span style="font-weight:700;">4 usuarios</span></td>
+                    <td>
+                      <button class="table-action-btn edit">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        Editar
+                      </button>
+                      <button class="table-action-btn delete">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>supervisor-ventas</b></td>
+                    <td>Operación de Ventas MFE y lectura contable en oficina.</td>
+                    <td><span class="badge info">Nivel 3 (Básico)</span></td>
+                    <td><span style="font-weight:700;">6 usuarios</span></td>
+                    <td>
+                      <button class="table-action-btn edit">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        Editar
+                      </button>
+                      <button class="table-action-btn delete">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>operador-rrhh</b></td>
+                    <td>Gestión de planillas y reportes del personal administrativo.</td>
+                    <td><span class="badge info">Nivel 3 (Básico)</span></td>
+                    <td><span style="font-weight:700;">12 usuarios</span></td>
+                    <td>
+                      <button class="table-action-btn edit">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        Editar
+                      </button>
+                      <button class="table-action-btn delete">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 6: DETALLE DE ROL - INFORMACIÓN DEL ROL -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/roles/admin-sistema</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de roles / <strong>Detalle: admin-sistema</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></span>
+                <span class="card-header-title">Detalle de Rol: admin-sistema</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton for subpanels -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn active">Información del Rol</button>
+                <button class="p-selectbutton-btn">
+                  <div class="click-indicator" style="top: -6px; right: -12px;"></div>
+                  Permisos Asignados
+                </button>
+                <button class="p-selectbutton-btn">Usuarios Vinculados</button>
+              </div>
+            </div>
+
+            <div class="detail-centered-container">
+              <div class="detail-section-fullwidth">
+                <span class="detail-section-title">Información del Rol</span>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Código del Rol</label>
+                  <input type="text" class="form-inp-iam" value="admin-sistema" disabled style="background:#F1F5F9; color:var(--mis-text-secondary);">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Nombre del Rol</label>
+                  <input type="text" class="form-inp-iam" value="Administrador del Sistema">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Descripción de Funciones</label>
+                  <input type="text" class="form-inp-iam" value="Acceso total a la configuración global de seguridad e IAM.">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Nivel de Seguridad</label>
+                  <select class="form-inp-iam" style="padding:0 6px;">
+                    <option selected>Nivel 1 (Super)</option>
+                    <option>Nivel 2 (Medio)</option>
+                    <option>Nivel 3 (Básico)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 7: DETALLE DE ROL - PERMISOS ASIGNADOS -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/roles/admin-sistema</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de roles / <strong>Detalle: admin-sistema</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></span>
+                <span class="card-header-title">Detalle de Rol: admin-sistema</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn">Información del Rol</button>
+                <button class="p-selectbutton-btn active">Permisos Asignados</button>
+                <button class="p-selectbutton-btn">
+                  <div class="click-indicator" style="top: -6px; right: -12px;"></div>
+                  Usuarios Vinculados
+                </button>
+              </div>
+            </div>
+
+            <!-- Resumen Matrix Card Grid -->
+            <div style="padding: 4px 12px 12px 12px; flex: 1; overflow-y: auto;">
+              <div class="role-resumen-grid">
+                
+                <div class="role-resumen-card">
+                  <div class="role-card-header">
+                    <span class="role-card-header-icon"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <div class="role-card-header-text">
+                      <span class="role-sistema-nombre">Contabilidad MFE</span>
+                      <span class="role-sistema-codigo">contabilidad</span>
+                    </div>
+                  </div>
+                  <div class="role-stats-row">
+                    <div class="role-stat role-stat--create"><span class="role-stat-value">12</span><span class="role-stat-label">Crear</span></div>
+                    <div class="role-stat role-stat--read"><span class="role-stat-value">24</span><span class="role-stat-label">Leer</span></div>
+                    <div class="role-stat role-stat--update"><span class="role-stat-value">8</span><span class="role-stat-label">Act.</span></div>
+                    <div class="role-stat role-stat--delete"><span class="role-stat-value">4</span><span class="role-stat-label">Elim.</span></div>
+                  </div>
+                  <div class="role-card-footer">
+                    <span class="role-total-text">48 permisos configurados</span>
+                    <button class="role-btn-view">Modificar Permisos</button>
+                  </div>
+                </div>
+
+                <div class="role-resumen-card">
+                  <div class="role-card-header">
+                    <span class="role-card-header-icon"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <div class="role-card-header-text">
+                      <span class="role-sistema-nombre">Recursos Humanos MFE</span>
+                      <span class="role-sistema-codigo">rrhh</span>
+                    </div>
+                  </div>
+                  <div class="role-stats-row">
+                    <div class="role-stat role-stat--create"><span class="role-stat-value">8</span><span class="role-stat-label">Crear</span></div>
+                    <div class="role-stat role-stat--read"><span class="role-stat-value">16</span><span class="role-stat-label">Leer</span></div>
+                    <div class="role-stat role-stat--update"><span class="role-stat-value">4</span><span class="role-stat-label">Act.</span></div>
+                    <div class="role-stat role-stat--delete"><span class="role-stat-value">2</span><span class="role-stat-label">Elim.</span></div>
+                  </div>
+                  <div class="role-card-footer">
+                    <span class="role-total-text">30 permisos configurados</span>
+                    <button class="role-btn-view">Modificar Permisos</button>
+                  </div>
+                </div>
+
+                <div class="role-resumen-card">
+                  <div class="role-card-header">
+                    <span class="role-card-header-icon"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <div class="role-card-header-text">
+                      <span class="role-sistema-nombre">Módulo de Ventas</span>
+                      <span class="role-sistema-codigo">ventas</span>
+                    </div>
+                  </div>
+                  <div class="role-stats-row">
+                    <div class="role-stat role-stat--create"><span class="role-stat-value">0</span><span class="role-stat-label">Crear</span></div>
+                    <div class="role-stat role-stat--read"><span class="role-stat-value">0</span><span class="role-stat-label">Leer</span></div>
+                    <div class="role-stat role-stat--update"><span class="role-stat-value">0</span><span class="role-stat-label">Act.</span></div>
+                    <div class="role-stat role-stat--delete"><span class="role-stat-value">0</span><span class="role-stat-label">Elim.</span></div>
+                  </div>
+                  <div class="role-card-footer">
+                    <span class="role-total-text">Sin permisos</span>
+                    <button class="role-btn-view">Modificar Permisos</button>
+                  </div>
+                </div>
+
+                <div class="role-resumen-card" style="opacity: 0.6;">
+                  <div class="role-card-header">
+                    <span class="role-card-header-icon"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <div class="role-card-header-text">
+                      <span class="role-sistema-nombre">Logística MFE</span>
+                      <span class="role-sistema-codigo">logistica</span>
+                    </div>
+                  </div>
+                  <div class="role-stats-row">
+                    <div class="role-stat role-stat--create"><span class="role-stat-value">0</span><span class="role-stat-label">Crear</span></div>
+                    <div class="role-stat role-stat--read"><span class="role-stat-value">0</span><span class="role-stat-label">Leer</span></div>
+                    <div class="role-stat role-stat--update"><span class="role-stat-value">0</span><span class="role-stat-label">Act.</span></div>
+                    <div class="role-stat role-stat--delete"><span class="role-stat-value">0</span><span class="role-stat-label">Elim.</span></div>
+                  </div>
+                  <div class="role-card-footer">
+                    <span class="role-total-text">Sin permisos</span>
+                    <button class="role-btn-view" disabled>Modificar Permisos</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 8: DETALLE DE ROL - USUARIOS VINCULADOS -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/accesos/roles/admin-sistema</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de roles / <strong>Detalle: admin-sistema</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg></span>
+                <span class="card-header-title">Detalle de Rol: admin-sistema</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn">Información del Rol</button>
+                <button class="p-selectbutton-btn">Permisos Asignados</button>
+                <button class="p-selectbutton-btn active">Usuarios Vinculados</button>
+              </div>
+            </div>
+
+            <!-- List of Linked Users table -->
+            <div class="table-container-scroll" style="padding: 12px 16px;">
+              <table class="data-table-prime">
+                <thead>
+                  <tr>
+                    <th>Cód. Personal</th>
+                    <th>Documento</th>
+                    <th>Nombre Completo</th>
+                    <th>Email</th>
+                    <th>Puesto</th>
+                    <th>Unidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>920391</code></td>
+                    <td><b>72819022</b></td>
+                    <td><div style="font-weight:600;">Diego Sullcarayra</div></td>
+                    <td>diego@confianza.pe</td>
+                    <td>Líder de TI</td>
+                    <td>Sistemas</td>
+                  </tr>
+                  <tr>
+                    <td><code>958291</code></td>
+                    <td><b>09218201</b></td>
+                    <td><div style="font-weight:600;">Jesús Pinedo</div></td>
+                    <td>jesus.pinedo@confianza.pe</td>
+                    <td>Administrador BD</td>
+                    <td>Sistemas</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 9: GESTIÓN DE SISTEMAS -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/sistemas</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / <strong>Gestión de sistemas</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></span>
+                <span class="card-header-title">Sistemas Embebidos (MFEs)</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary); font-size:10.5px;">Tabla</button>
+                <button class="btn-action">+ Nuevo Sistema</button>
+              </div>
+            </div>
+
+            <div style="padding: 16px; overflow-y: auto; flex: 1;">
+              <div class="systems-grid">
+                
+                <div class="sys-card">
+                  <span class="sys-platform-badge">AZURE CONTAINER</span>
+                  <div class="sys-card-header">
+                    <div class="sys-icon-wrap" style="background:#E8EDF5; color:var(--mis-primary);">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                    </div>
+                    <div>
+                      <h4 class="sys-title">Contabilidad</h4>
+                      <span class="badge success" style="font-size:8px;">ONLINE (24ms)</span>
+                    </div>
+                  </div>
+                  <div class="sys-meta-info">
+                    <span class="sys-meta-label">Slug:</span><span>contabilidad</span>
+                    <span class="sys-meta-label">Manifest:</span><code>http://localhost:4201/...</code>
+                    <span class="sys-meta-label">Deploy:</span><span>Terraform K8s Cluster</span>
+                  </div>
+                  <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--mis-border); padding-top:10px; margin-top:4px; position: relative;">
+                    <div class="click-indicator" style="top: 8px; right: 64px;"></div>
+                    <button class="table-action-btn edit">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      Editar
+                    </button>
+                    <button class="table-action-btn delete">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="sys-card">
+                  <span class="sys-platform-badge" style="background:#EBFDF2; color:#15803D;">GOOGLE VM Tomcat</span>
+                  <div class="sys-card-header">
+                    <div class="sys-icon-wrap" style="background:#E8F6FC; color:var(--mis-secondary);">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                      <h4 class="sys-title">Recursos Humanos</h4>
+                      <span class="badge success" style="font-size:8px;">ONLINE (42ms)</span>
+                    </div>
+                  </div>
+                  <div class="sys-meta-info">
+                    <span class="sys-meta-label">Slug:</span><span>rrhh</span>
+                    <span class="sys-meta-label">Manifest:</span><code>http://localhost:4202/...</code>
+                    <span class="sys-meta-label">Deploy:</span><span>Dokploy VM Tomcat</span>
+                  </div>
+                  <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--mis-border); padding-top:10px; margin-top:4px;">
+                    <button class="table-action-btn edit">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      Editar
+                    </button>
+                    <button class="table-action-btn delete">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="sys-card">
+                  <span class="sys-platform-badge">AZURE CONTAINER</span>
+                  <div class="sys-card-header">
+                    <div class="sys-icon-wrap" style="background:#FEF3C7; color:#B45309;">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <div>
+                      <h4 class="sys-title">Módulo de Ventas</h4>
+                      <span class="badge success" style="font-size:8px;">ONLINE (12ms)</span>
+                    </div>
+                  </div>
+                  <div class="sys-meta-info">
+                    <span class="sys-meta-label">Slug:</span><span>ventas</span>
+                    <span class="sys-meta-label">Manifest:</span><code>http://localhost:4203/...</code>
+                    <span class="sys-meta-label">Deploy:</span><span>Terraform K8s Cluster</span>
+                  </div>
+                  <div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--mis-border); padding-top:10px; margin-top:4px;">
+                    <button class="table-action-btn edit">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      Editar
+                    </button>
+                    <button class="table-action-btn delete">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 10: DETALLE DE SISTEMA - INFORMACIÓN DE REGISTRO -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/sistemas/contabilidad</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de sistemas / <strong>Detalle: Contabilidad</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/></svg></span>
+                <span class="card-header-title">Detalle de Sistema MFE: Contabilidad</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn active">Información de Registro</button>
+                <button class="p-selectbutton-btn">
+                  <div class="click-indicator" style="top: -6px; right: -12px;"></div>
+                  Configuración de Despliegue
+                </button>
+              </div>
+            </div>
+
+            <div class="detail-centered-container">
+              <div class="detail-section-fullwidth">
+                <span class="detail-section-title">Información de Registro</span>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Nombre del Módulo / Subsistema</label>
+                  <input type="text" class="form-inp-iam" value="Contabilidad">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Ruta Slug (URL Segment)</label>
+                  <input type="text" class="form-inp-iam" value="contabilidad">
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">URL del Manifest (remoteEntry)</label>
+                  <input type="text" class="form-inp-iam" value="http://localhost:4201/remoteEntry.js">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 11: DETALLE DE SISTEMA - CONFIGURACIÓN DE DESPLIEGUE -->
+  <div class="window-frame">
+    <div class="frame-chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost:4200/admin/sistemas/contabilidad</div>
+    </div>
+    <div class="app-shell">
+      <div class="app-sidebar-col1">
+        <div class="col1-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="col1-sep"></div>
+        <div class="sb-icon active">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="sb-lbl">Inicio</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="sb-lbl">Conta.</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="sb-lbl">RRHH</div>
+        </div>
+        <div class="sb-icon">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="sb-lbl">Ventas</div>
+        </div>
+        <div class="sb-icon" style="opacity: 0.55;">
+          <div class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+          <div class="sb-lbl">Logís.</div>
+        </div>
+      </div>
+      <div class="app-sidebar-col2">
+        <div class="nav-panel-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <div class="ph-title">Host Principal</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Acceso directo</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mi espacio</div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Accesos [Admin]</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Gestión de usuarios</div>
+          <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>Gestión de roles</div>
+          <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Gestión de sistemas</div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="app-header">
+          <div class="header-wordmark">MIS</div>
+          <div class="header-sep"></div>
+          <div class="header-breadcrumb">Accesos / Gestión de sistemas / <strong>Detalle: Contabilidad</strong></div>
+          <div class="header-user-btn">
+            <div class="avatar-sm">DS</div>
+            <span class="header-user-name">Diego S.</span>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="card-contained">
+            <div class="card-header-bar">
+              <div class="card-header-left">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/></svg></span>
+                <span class="card-header-title">Detalle de Sistema MFE: Contabilidad</span>
+              </div>
+              <div class="card-header-right">
+                <button class="btn-action" style="background:#E2E8F0; color:var(--mis-text-primary);">Cancelar</button>
+                <button class="btn-action" style="background:#059669; border-color:#059669;">Guardar Cambios</button>
+              </div>
+            </div>
+
+            <!-- PrimeNG SelectButton -->
+            <div style="padding: 12px 16px 0; display: flex; justify-content: center; position: relative;">
+              <div class="p-selectbutton">
+                <button class="p-selectbutton-btn">Información de Registro</button>
+                <button class="p-selectbutton-btn active">Configuración de Despliegue</button>
+              </div>
+            </div>
+
+            <div class="detail-centered-container">
+              <div class="detail-section-fullwidth">
+                <span class="detail-section-title">Configuración de Despliegue</span>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Proveedor de Infraestructura</label>
+                  <select class="form-inp-iam" style="padding:0 6px;">
+                    <option selected>Azure Containers (Terraform)</option>
+                    <option>Google VM Tomcat (Dokploy)</option>
+                  </select>
+                </div>
+                <div class="form-group-iam">
+                  <label class="form-lbl-iam">Puerto de Ejecución Local</label>
+                  <input type="text" class="form-inp-iam" value="4201">
+                </div>
+                <div class="form-group-iam" style="margin-top: 4px;">
+                  <label class="form-lbl-iam">Estado del Contenedor</label>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                    <label class="switch-toggle">
+                      <input type="checkbox" checked>
+                      <span class="slider"></span>
+                    </label>
+                    <span style="font-size:11px; font-weight:600; color:var(--mis-success);">Contenedor ONLINE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

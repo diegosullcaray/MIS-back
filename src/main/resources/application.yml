@@ -1,0 +1,42 @@
+# ── MIS Host · Backend — configuración común ────────────────────────────────
+spring:
+  application:
+    name: mis-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jpa:
+    hibernate:
+      ddl-auto: none          # Flyway es dueño del esquema (BE-06)
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+mis:
+  jwt:
+    secret: ${MIS_JWT_SECRET:dev-insecure-secret-change-me-0123456789-abcdefghijklmnop}
+    expiration: 8h
+    issuer: mis-host
+  cors:
+    origins: ${MIS_CORS_ORIGINS:http://localhost:4200}
+  auth:
+    otp:
+      ttl: 3m
+      max-intentos: 5
+      longitud: 6
+    mfa:
+      token-ttl: 3m
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

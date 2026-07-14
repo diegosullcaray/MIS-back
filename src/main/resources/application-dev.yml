@@ -1,0 +1,26 @@
+# ── Perfil DEV: auth por email + contraseña + OTP fijo ──────────────────────
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/DESA_MIS}
+    username: ${SPRING_DATASOURCE_USERNAME:mis_backend}
+    password: ${SPRING_DATASOURCE_PASSWORD:MisBackend.Dev2026}
+  jpa:
+    show-sql: false
+
+mis:
+  auth:
+    otp:
+      # OTP fijo en dev (paridad con el 123456 de la Fake API del Host).
+      # Déjese vacío para OTP aleatorio (se imprime en el log).
+      fixed-code: "123456"
+
+# Swagger UI disponible en dev: http://localhost:8080/swagger-ui.html
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+
+logging:
+  level:
+    pe.confianza.mis: DEBUG

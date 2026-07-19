@@ -12,11 +12,11 @@ public final class SistemaDtos {
 
     private SistemaDtos() {}
 
-    public record ModuloDto(UUID id, String nombre, String slug, boolean activo) {}
+    public record ModuloDto(UUID id, String nombre, String slug, String icono, boolean activo) {}
 
     public record SubseccionDto(UUID id, String nombre, String slug, List<ModuloDto> modulos) {}
 
-    public record SeccionDto(UUID id, String nombre, String slug, List<SubseccionDto> subsecciones) {}
+    public record SeccionDto(UUID id, String nombre, String slug, String icono, List<SubseccionDto> subsecciones) {}
 
     public record SistemaDto(
             UUID id, String nombre, String slug, String descripcion, String icono,
@@ -34,11 +34,19 @@ public final class SistemaDtos {
                     message = "El slug debe ser kebab-case en minúsculas.") String slug,
             String descripcion, String icono, String url, String version, String estado) {}
 
-    // Estructura (PUT /sistemas/{id}/estructura) — entrada anidada de secciones
-    public record ModuloInput(String nombre, String slug, Boolean activo) {}
+    // Estructura (PUT /sistemas/{id}/estructura) — entrada anidada de secciones.
+    // El orden lo define la posición en el arreglo (se persiste 1-based, v2.1);
+    // `icono` es opcional (default 'pi pi-folder' / 'pi pi-file').
+    public record ModuloInput(String nombre, String slug, String icono, Boolean activo) {}
     public record SubseccionInput(String nombre, String slug, List<ModuloInput> modulos) {}
-    public record SeccionInput(String nombre, String slug, List<SubseccionInput> subsecciones) {}
+    public record SeccionInput(String nombre, String slug, String icono, List<SubseccionInput> subsecciones) {}
 
-    public record PermisoRolSistemaDto(UUID rolId, UUID sistemaId, List<UUID> modulos) {}
-    public record GuardarPermisosRequest(List<UUID> modulos) {}
+    // Permisos por nivel (v2.2): el rol puede recibir permiso en sección,
+    // subsección o módulo, con herencia descendente. El nivel SISTEMA se
+    // administra con el campo `subsistemas` del rol (iam.rol_sistema).
+    public record PermisoRolSistemaDto(
+            UUID rolId, UUID sistemaId,
+            List<UUID> secciones, List<UUID> subsecciones, List<UUID> modulos) {}
+    public record GuardarPermisosRequest(
+            List<UUID> secciones, List<UUID> subsecciones, List<UUID> modulos) {}
 }

@@ -1,5 +1,5 @@
 # Guía de Importación y Especificación UX/UI para Figma (MIS - Financiera Confianza)
-> **Documentación Activa:** [01_PRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/01_PRD.md) | [02_UI_UX_APP_FLOW](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/02_UI_UX_APP_FLOW.md) | [03_TRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/03_TRD.md) | [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/06_FIGMA_UX_KIT.html)  
+> **Documentación Activa:** [01_PRD](../01_PRD.md) | [02_UI_UX_APP_FLOW](../02_UI_UX_APP_FLOW.md) | [03_TRD](../03_TRD.md) | [04_BACKEND_SCHEMA](../Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](../05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT](../06_FIGMA_UX_KIT.html)  
 > **Kit:** v3.1 (2026-07-12) — plantillas en `docs_proyecto/FIGMA/` (login.html · dashboard_interaccion.html · gestion_iam.html)
 
 Este documento sirve como guía para importar las plantillas interactivas de `docs_proyecto/FIGMA/` a Figma, y detalla la especificación técnica de arquitectura de información y UX.
@@ -129,6 +129,6 @@ La comunicación y ciclo de vida de los subsistemas se define a través de:
 
 | Capa | Decisión |
 |---|---|
-| **Backend** | Spring Boot 3 (monolito modular) + PostgreSQL — ver [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) y [07_DATABASE_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/07_DATABASE_SCHEMA.sql) |
+| **Backend** | Spring Boot (monolito modular) + PostgreSQL — ver [04_BACKEND_SCHEMA](../Backend/04_BACKEND_SCHEMA.md) y [07_DATABASE_SCHEMA_v2.2](../Backend/07_DATABASE_SCHEMA_v2.2.sql) |
 | **Contenedores** | Azure (contenedores, aprovisionados con Terraform) y Google Cloud (VMs con Dokploy) |
 | **Frontend** | Angular zoneless + Native Federation, Tailwind v4 + PrimeNG (preset MisTheme), diseño macOS Aurora Minimalist; los subsistemas se embeben como Remotes (web y móvil) |

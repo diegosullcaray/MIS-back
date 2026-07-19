@@ -1,6 +1,6 @@
 # 08 — Guía de Sistemas Hijos (Remotes): Integración al MIS
 > **Proyecto:** MIS - Management Information System
-> **Documentación Activa:** [01_PRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/01_PRD.md) | [02_UI_UX_APP_FLOW](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/02_UI_UX_APP_FLOW.md) | [03_TRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/03_TRD.md) | [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) | [07_DATABASE_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/07_DATABASE_SCHEMA.sql)
+> **Documentación Activa:** [01_PRD](01_PRD.md) | [02_UI_UX_APP_FLOW](02_UI_UX_APP_FLOW.md) | [03_TRD](03_TRD.md) | [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md) | [07_DATABASE_SCHEMA](Backend/07_DATABASE_SCHEMA_v2.2.sql)
 > **Versión:** 1.0.0
 > **Fecha:** 2026-07-12
 > **Ejemplo guía:** `mis-remote-reportes` (Sistema de Reportes)

@@ -65,11 +65,15 @@ public class SistemaController {
         return service.permisosDeSistema(id);
     }
 
-    /** PUT /api/v1/sistemas/{id}/permisos/{rolId} — upsert de permisos del rol. */
+    /**
+     * PUT /api/v1/sistemas/{id}/permisos/{rolId} — upsert de permisos del rol por
+     * nivel (v2.2): body { secciones, subsecciones, modulos } con herencia
+     * descendente (conceder un nivel habilita todo lo que cuelga de él).
+     */
     @PutMapping("/{id}/permisos/{rolId}")
     @PreAuthorize("hasRole('ADMIN_SISTEMA')")
     public PermisoRolSistemaDto guardarPermisos(@PathVariable UUID id, @PathVariable UUID rolId,
                                                 @RequestBody GuardarPermisosRequest req) {
-        return service.guardarPermisos(id, rolId, req.modulos());
+        return service.guardarPermisos(id, rolId, req);
     }
 }

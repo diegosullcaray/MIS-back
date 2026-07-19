@@ -20,21 +20,22 @@ INSERT INTO sistemas.sistemas (nombre, slug, descripcion, icono, url, version, e
     ('Ventas',       'subsistema-ventas',       'Clientes, cotizaciones, pedidos y facturación.',       'pi pi-chart-line', 'http://localhost:4203/remoteEntry.json', '1.0.5', 'mantenimiento'),
     ('Logística',    'subsistema-logistica',    'Almacenes, inventarios y compras.',                    'pi pi-truck',      'http://localhost:4204/remoteEntry.json', '0.9.0', 'inactivo');
 
--- Estructura mínima de Contabilidad (para probar estructura/permisos)
+-- Estructura mínima de Contabilidad (para probar estructura/permisos).
+-- `orden` es 1-based (CHECK orden >= 1) y único por padre (v2.1).
 WITH s AS (SELECT id FROM sistemas.sistemas WHERE slug = 'subsistema-contabilidad'),
      sec AS (
-        INSERT INTO sistemas.secciones (sistema_id, nombre, slug, orden)
-        SELECT s.id, 'Contabilidad General', 'contabilidad-general', 0 FROM s
+        INSERT INTO sistemas.secciones (sistema_id, nombre, slug, icono, orden)
+        SELECT s.id, 'Contabilidad General', 'contabilidad-general', 'pi pi-book', 1 FROM s
         RETURNING id),
      sub AS (
         INSERT INTO sistemas.subsecciones (seccion_id, nombre, slug, orden)
-        SELECT sec.id, 'Libros Contables', 'libros-contables', 0 FROM sec
+        SELECT sec.id, 'Libros Contables', 'libros-contables', 1 FROM sec
         RETURNING id)
-INSERT INTO sistemas.modulos (subseccion_id, nombre, slug, activo, orden)
-SELECT sub.id, x.nombre, x.slug, true, x.orden
-FROM sub, (VALUES ('Libro Diario','libro-diario',0),
-                  ('Libro Mayor','libro-mayor',1),
-                  ('Balance de Comprobación','balance-comprobacion',2)) AS x(nombre, slug, orden);
+INSERT INTO sistemas.modulos (subseccion_id, nombre, slug, icono, activo, orden)
+SELECT sub.id, x.nombre, x.slug, x.icono, true, x.orden
+FROM sub, (VALUES ('Libro Diario','libro-diario','pi pi-file',1),
+                  ('Libro Mayor','libro-mayor','pi pi-file',2),
+                  ('Balance de Comprobación','balance-comprobacion','pi pi-file-check',3)) AS x(nombre, slug, icono, orden);
 
 -- ─── Usuarios + credenciales ──────────────────────────────────────────────────
 WITH nuevo AS (

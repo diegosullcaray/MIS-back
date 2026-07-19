@@ -1,6 +1,6 @@
 # 01 — Product Requirements Document (PRD)
 > **Proyecto:** MIS - Management Information System  
-> **Documentación Activa:** [01_PRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/01_PRD.md) | [02_UI_UX_APP_FLOW](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/02_UI_UX_APP_FLOW.md) | [03_TRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/03_TRD.md) | [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT_GUIDE](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [07_DATABASE_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/07_DATABASE_SCHEMA.sql) | [08_GUIA_SISTEMAS_HIJOS](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/08_GUIA_SISTEMAS_HIJOS.md)  
+> **Documentación Activa:** [01_PRD](01_PRD.md) | [02_UI_UX_APP_FLOW](02_UI_UX_APP_FLOW.md) | [03_TRD](03_TRD.md) | [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT_GUIDE](FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [07_DATABASE_SCHEMA](Backend/07_DATABASE_SCHEMA_v2.2.sql) | [08_GUIA_SISTEMAS_HIJOS](08_GUIA_SISTEMAS_HIJOS.md)  
 > **Tipo:** Panel Administrador Centralizador (Micro-Frontend Host + Remotes)  
 > **Versión:** 1.2.0  
 > **Fecha:** 2026-07-12  
@@ -48,7 +48,7 @@ El sistema **Host administra la estructura principal y seguridad**, mientras **e
 - **Estados de UI**: loading skeletons (`@defer`), estado de error elegante cuando un Remote no está disponible.
 - **Autenticación con MFA**: formulario de login con contraseña seguido de un paso de verificación de identidad OTP de 6 dígitos.
 - **Gestión de Accesos (IAM)**: módulo administrativo para crear/editar/desactivar usuarios, definir roles y asignar permisos de acceso a subsistemas (Remotes) por rol.
-- **Gestión de Sistemas**: módulo administrativo para registrar los sistemas embebibles (Remotes), definir su **estructura jerárquica** (`Sistema → Secciones → Subsecciones → Módulos`) y configurar los **permisos de cada rol a nivel de módulo**.
+- **Gestión de Sistemas**: módulo administrativo para registrar los sistemas embebibles (Remotes), definir su **estructura jerárquica** (`Sistema → Secciones → Subsecciones → Módulos`) y configurar los **permisos de cada rol en cualquier nivel de la jerarquía** (sistema, sección, subsección o módulo) con **herencia descendente**: conceder un nivel habilita todo lo que cuelga de él.
 - **Diseño Segmentado (SelectButton)**: pantallas de edición y detalle subdivididas en paneles lógicos mediante el control segmentado de PrimeNG para evitar la saturación visual.
 
 ### ❌ Fuera del Alcance (MVP)
@@ -126,7 +126,7 @@ El sistema **Host administra la estructura principal y seguridad**, mientras **e
 - **Angular 21/22** como framework base (última versión estable disponible).
 - **`@angular-architects/native-federation`** como mecanismo de federación (sin Webpack).
 - Modo **Zoneless** obligatorio (`provideZonelessChangeDetection`).
-- **Spring Boot 3 + PostgreSQL 16** para el backend del Host (ver [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md)); cada Remote lleva su backend propio (ver [08_GUIA_SISTEMAS_HIJOS](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/08_GUIA_SISTEMAS_HIJOS.md)).
+- **Spring Boot 3 + PostgreSQL 16** para el backend del Host (ver [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md)); cada Remote lleva su backend propio (ver [08_GUIA_SISTEMAS_HIJOS](08_GUIA_SISTEMAS_HIJOS.md)).
 - Cada subsistema se desplegará en su propia **imagen Docker** en un registry privado.
 - Orquestación de contenedores vía **Dokploy** o **Coolify**.
 

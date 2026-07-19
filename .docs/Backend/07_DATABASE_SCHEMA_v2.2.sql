@@ -1,7 +1,7 @@
 -- ============================================================================
 -- 07 — DATABASE SCHEMA · MIS Host (PostgreSQL 16+)
 -- Proyecto : MIS - Management Information System (Financiera Confianza)
--- Versión  : 2.0.0 (2026-07-12)
+-- Versión  : 2.2.0 (2026-07-14)
 -- Uso      : Migración baseline de Flyway (db/migration/V1__baseline.sql)
 --            Contrato documentado en 04_BACKEND_SCHEMA.md §5
 --
@@ -16,6 +16,11 @@
 --     por mes + bitácora de accesos (login/OTP/denegaciones).
 --   · SIN redundancias: dominios reutilizables (slug, email), un solo trigger
 --     de `actualizado_en`, extensiones declaradas antes de usarse.
+--   · ORDEN DETERMINISTA (v2.1): `orden` es obligatorio y ÚNICO por padre en
+--     secciones/subsecciones/módulos (constraints DEFERRABLE para reordenar
+--     en una sola transacción). La vista `sistemas.v_sidebar` entrega el
+--     árbol ya ordenado y con la `ruta` calculada — es el contrato que los
+--     sistemas hijos (Remotes) consumen para pintar su sidebar y sus rutas.
 --
 -- Contexto de actor (lo setea Spring en cada transacción, p. ej. con un
 -- interceptor de Hibernate):
@@ -118,14 +123,25 @@ CREATE TABLE sistemas.sistemas (
     actualizado_en TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
+-- ORDENAMIENTO (v2.1): `orden` es la posición explícita del ítem dentro de su
+-- padre (1, 2, 3…). Es NOT NULL SIN default y ÚNICO por padre: la BD garantiza
+-- que el sidebar de cada sistema hijo se renderiza SIEMPRE igual — el orden lo
+-- decide el administrador en el editor de estructura, no el plan de ejecución.
+-- Los UNIQUE son DEFERRABLE INITIALLY DEFERRED para que el
+-- PUT /sistemas/{id}/estructura pueda renumerar hermanos (swap 2↔3) en una
+-- sola transacción sin violaciones intermedias (BE-07).
+
 CREATE TABLE sistemas.secciones (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     sistema_id UUID        NOT NULL REFERENCES sistemas.sistemas (id) ON DELETE CASCADE,
     nombre     VARCHAR(80) NOT NULL,
     slug       dom_slug    NOT NULL,
-    orden      SMALLINT    NOT NULL DEFAULT 0,
+    icono      VARCHAR(60) NOT NULL DEFAULT 'pi pi-folder',  -- ícono del grupo en el sidebar
+    orden      SMALLINT    NOT NULL CHECK (orden >= 1),
 
-    CONSTRAINT uq_secciones_slug UNIQUE (sistema_id, slug)
+    CONSTRAINT uq_secciones_slug  UNIQUE (sistema_id, slug),
+    CONSTRAINT uq_secciones_orden UNIQUE (sistema_id, orden)
+        DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE sistemas.subsecciones (
@@ -133,9 +149,11 @@ CREATE TABLE sistemas.subsecciones (
     seccion_id UUID        NOT NULL REFERENCES sistemas.secciones (id) ON DELETE CASCADE,
     nombre     VARCHAR(80) NOT NULL,
     slug       dom_slug    NOT NULL,
-    orden      SMALLINT    NOT NULL DEFAULT 0,
+    orden      SMALLINT    NOT NULL CHECK (orden >= 1),
 
-    CONSTRAINT uq_subsecciones_slug UNIQUE (seccion_id, slug)
+    CONSTRAINT uq_subsecciones_slug  UNIQUE (seccion_id, slug),
+    CONSTRAINT uq_subsecciones_orden UNIQUE (seccion_id, orden)
+        DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE sistemas.modulos (
@@ -143,15 +161,18 @@ CREATE TABLE sistemas.modulos (
     subseccion_id UUID        NOT NULL REFERENCES sistemas.subsecciones (id) ON DELETE CASCADE,
     nombre        VARCHAR(80) NOT NULL,
     slug          dom_slug    NOT NULL,
+    icono         VARCHAR(60) NOT NULL DEFAULT 'pi pi-file',  -- ícono del ítem navegable
     activo        BOOLEAN     NOT NULL DEFAULT TRUE,
-    orden         SMALLINT    NOT NULL DEFAULT 0,
+    orden         SMALLINT    NOT NULL CHECK (orden >= 1),
 
-    CONSTRAINT uq_modulos_slug UNIQUE (subseccion_id, slug)
+    CONSTRAINT uq_modulos_slug  UNIQUE (subseccion_id, slug),
+    CONSTRAINT uq_modulos_orden UNIQUE (subseccion_id, orden)
+        DEFERRABLE INITIALLY DEFERRED
 );
 
-CREATE INDEX idx_secciones_sistema    ON sistemas.secciones    (sistema_id, orden);
-CREATE INDEX idx_subsecciones_seccion ON sistemas.subsecciones (seccion_id, orden);
-CREATE INDEX idx_modulos_subseccion   ON sistemas.modulos      (subseccion_id, orden);
+-- (v2.1) Los índices (padre, orden) ya NO se declaran aparte: los constraints
+-- UNIQUE (sistema_id, orden) / (seccion_id, orden) / (subseccion_id, orden)
+-- crean el índice compuesto automáticamente — cero redundancia.
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 3. Asignaciones y permisos (pertenecen a IAM; referencian a `sistemas` —
@@ -175,7 +196,39 @@ CREATE TABLE iam.usuario_sistema (
     PRIMARY KEY (usuario_id, sistema_id)
 );
 
--- Permisos a nivel de MÓDULO por rol (PermisoRolSistema = agrupación por sistema)
+-- ─────────────────────────────────────────────────────────────────────────
+-- PERMISOS POR NIVEL (v2.2): el rol puede recibir permiso en CUALQUIER nivel
+-- de la jerarquía — Sistema → Sección → Subsección → Módulo — con HERENCIA
+-- descendente: conceder un nivel habilita todo lo que cuelga de él.
+--   · Nivel SISTEMA   → lo cubre iam.rol_sistema (ya existente): habilita
+--                       el subsistema completo para el rol.
+--   · Nivel SECCIÓN   → iam.permiso_rol_seccion
+--   · Nivel SUBSECCIÓN→ iam.permiso_rol_subseccion
+--   · Nivel MÓDULO    → iam.permiso_rol_modulo (grano fino)
+-- Una tabla por nivel (y no una tabla polimórfica nivel+entidad_id) porque
+-- así cada permiso tiene FK REAL a su entidad: integridad referencial y
+-- depuración automática por CASCADE al reestructurar (BE-07).
+-- La resolución de permisos EFECTIVOS a nivel módulo la hace la vista
+-- iam.v_permisos_efectivos (§9) — el backend consulta UNA sola fuente.
+-- ─────────────────────────────────────────────────────────────────────────
+
+-- Permiso a nivel de SECCIÓN (hereda a todas sus subsecciones y módulos)
+CREATE TABLE iam.permiso_rol_seccion (
+    rol_id     UUID NOT NULL REFERENCES iam.roles            (id) ON DELETE CASCADE,
+    seccion_id UUID NOT NULL REFERENCES sistemas.secciones   (id) ON DELETE CASCADE,
+
+    PRIMARY KEY (rol_id, seccion_id)
+);
+
+-- Permiso a nivel de SUBSECCIÓN (hereda a todos sus módulos)
+CREATE TABLE iam.permiso_rol_subseccion (
+    rol_id        UUID NOT NULL REFERENCES iam.roles              (id) ON DELETE CASCADE,
+    subseccion_id UUID NOT NULL REFERENCES sistemas.subsecciones  (id) ON DELETE CASCADE,
+
+    PRIMARY KEY (rol_id, subseccion_id)
+);
+
+-- Permiso a nivel de MÓDULO (grano fino; PermisoRolSistema = agrupación por sistema)
 CREATE TABLE iam.permiso_rol_modulo (
     rol_id    UUID NOT NULL REFERENCES iam.roles        (id) ON DELETE CASCADE,
     modulo_id UUID NOT NULL REFERENCES sistemas.modulos (id) ON DELETE CASCADE,
@@ -185,9 +238,11 @@ CREATE TABLE iam.permiso_rol_modulo (
     PRIMARY KEY (rol_id, modulo_id)
 );
 
-CREATE INDEX idx_rol_sistema_sistema  ON iam.rol_sistema        (sistema_id);
-CREATE INDEX idx_usuario_sistema_sist ON iam.usuario_sistema    (sistema_id);
-CREATE INDEX idx_permiso_modulo       ON iam.permiso_rol_modulo (modulo_id);
+CREATE INDEX idx_rol_sistema_sistema   ON iam.rol_sistema           (sistema_id);
+CREATE INDEX idx_usuario_sistema_sist  ON iam.usuario_sistema       (sistema_id);
+CREATE INDEX idx_permiso_seccion       ON iam.permiso_rol_seccion   (seccion_id);
+CREATE INDEX idx_permiso_subseccion    ON iam.permiso_rol_subseccion (subseccion_id);
+CREATE INDEX idx_permiso_modulo        ON iam.permiso_rol_modulo    (modulo_id);
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 4. AUTH — Desafíos MFA y sesiones emitidas
@@ -310,6 +365,8 @@ CREATE TRIGGER trg_aud_usuarios   AFTER INSERT OR UPDATE OR DELETE ON iam.usuari
 CREATE TRIGGER trg_aud_credenc    AFTER INSERT OR UPDATE OR DELETE ON iam.credenciales       FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
 CREATE TRIGGER trg_aud_rol_sist   AFTER INSERT OR UPDATE OR DELETE ON iam.rol_sistema        FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
 CREATE TRIGGER trg_aud_usu_sist   AFTER INSERT OR UPDATE OR DELETE ON iam.usuario_sistema    FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
+CREATE TRIGGER trg_aud_perm_sec   AFTER INSERT OR UPDATE OR DELETE ON iam.permiso_rol_seccion    FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
+CREATE TRIGGER trg_aud_perm_sub   AFTER INSERT OR UPDATE OR DELETE ON iam.permiso_rol_subseccion FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
 CREATE TRIGGER trg_aud_permisos   AFTER INSERT OR UPDATE OR DELETE ON iam.permiso_rol_modulo FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
 CREATE TRIGGER trg_aud_sistemas   AFTER INSERT OR UPDATE OR DELETE ON sistemas.sistemas      FOR EACH ROW EXECUTE FUNCTION auditoria.fn_registrar_cambio();
 
@@ -404,10 +461,84 @@ FROM sistemas.sistemas s
 LEFT JOIN conteos c            ON c.sistema_id = s.id
 LEFT JOIN roles_por_sistema r  ON r.sistema_id = s.id;
 
+-- (v2.1) SIDEBAR DE LOS SISTEMAS HIJOS — árbol plano, YA ORDENADO y con la
+-- ruta canónica calculada a partir de los slugs:
+--     /{sistema}/{seccion}/{subseccion}/{modulo}
+-- El backend del Host la consume para GET /sistemas/{idOSlug} y para armar el
+-- menú que cada Remote pinta. El orden de las filas es el orden visual del
+-- sidebar (ORDER BY orden en cada nivel); el frontend NO reordena nada.
+CREATE OR REPLACE VIEW sistemas.v_sidebar AS
+SELECT
+    s.id            AS sistema_id,
+    s.slug          AS sistema_slug,
+    sec.id          AS seccion_id,
+    sec.nombre      AS seccion_nombre,
+    sec.slug        AS seccion_slug,
+    sec.icono       AS seccion_icono,
+    sec.orden       AS seccion_orden,
+    sub.id          AS subseccion_id,
+    sub.nombre      AS subseccion_nombre,
+    sub.slug        AS subseccion_slug,
+    sub.orden       AS subseccion_orden,
+    m.id            AS modulo_id,
+    m.nombre        AS modulo_nombre,
+    m.slug          AS modulo_slug,
+    m.icono         AS modulo_icono,
+    m.activo        AS modulo_activo,
+    m.orden         AS modulo_orden,
+    '/' || s.slug || '/' || sec.slug || '/' || sub.slug || '/' || m.slug
+                    AS ruta
+FROM sistemas.sistemas s
+JOIN sistemas.secciones     sec ON sec.sistema_id  = s.id
+JOIN sistemas.subsecciones  sub ON sub.seccion_id  = sec.id
+JOIN sistemas.modulos       m   ON m.subseccion_id = sub.id
+ORDER BY s.slug, sec.orden, sub.orden, m.orden;
+
+-- Variante con permisos: qué ve un ROL concreto en el sidebar de un sistema
+-- (JOIN con iam.permiso_rol_modulo; el service filtra por rol_id):
+--   SELECT v.* FROM sistemas.v_sidebar v
+--   JOIN iam.permiso_rol_modulo p ON p.modulo_id = v.modulo_id
+--   WHERE p.rol_id = :rolId AND v.sistema_slug = :slug AND v.modulo_activo;
+
+-- (v2.2) PERMISOS EFECTIVOS — resuelve la herencia de los 4 niveles a su
+-- expresión final: (rol, módulo). Un rol accede a un módulo si el permiso fue
+-- concedido en CUALQUIER nivel de su cadena de ancestros:
+--   sistema (iam.rol_sistema) ∪ sección ∪ subsección ∪ módulo
+-- El backend consulta SOLO esta vista (una fuente de verdad); el sidebar del
+-- Remote se obtiene cruzándola con sistemas.v_sidebar.
+CREATE OR REPLACE VIEW iam.v_permisos_efectivos AS
+WITH arbol AS (               -- cadena de ancestros de cada módulo
+    SELECT m.id  AS modulo_id,
+           sub.id AS subseccion_id,
+           sec.id AS seccion_id,
+           sec.sistema_id
+    FROM sistemas.modulos m
+    JOIN sistemas.subsecciones sub ON sub.id = m.subseccion_id
+    JOIN sistemas.secciones    sec ON sec.id = sub.seccion_id
+)
+SELECT rs.rol_id, a.modulo_id, 'sistema'::text AS origen
+FROM iam.rol_sistema rs JOIN arbol a ON a.sistema_id = rs.sistema_id
+UNION
+SELECT ps.rol_id, a.modulo_id, 'seccion'
+FROM iam.permiso_rol_seccion ps JOIN arbol a ON a.seccion_id = ps.seccion_id
+UNION
+SELECT pu.rol_id, a.modulo_id, 'subseccion'
+FROM iam.permiso_rol_subseccion pu JOIN arbol a ON a.subseccion_id = pu.subseccion_id
+UNION
+SELECT pm.rol_id, pm.modulo_id, 'modulo'
+FROM iam.permiso_rol_modulo pm;
+
+-- Sidebar filtrado por rol (lo que un rol realmente VE de un sistema):
+--   SELECT DISTINCT v.*
+--   FROM sistemas.v_sidebar v
+--   JOIN iam.v_permisos_efectivos p ON p.modulo_id = v.modulo_id
+--   WHERE p.rol_id = :rolId AND v.sistema_slug = :slug AND v.modulo_activo
+--   ORDER BY v.seccion_orden, v.subseccion_orden, v.modulo_orden;
+
 -- Usuario "público" (sin credenciales) — respuesta de GET /usuarios
 CREATE OR REPLACE VIEW iam.v_usuarios AS
 SELECT u.id, u.nombre, u.email, r.slug AS rol, u.activo, u.creado_en
 FROM iam.usuarios u
 JOIN iam.roles r ON r.id = u.rol_id;
 
-GRANT SELECT ON sistemas.v_sistemas_resumen, iam.v_usuarios TO mis_app;
+GRANT SELECT ON sistemas.v_sistemas_resumen, sistemas.v_sidebar, iam.v_permisos_efectivos, iam.v_usuarios TO mis_app;

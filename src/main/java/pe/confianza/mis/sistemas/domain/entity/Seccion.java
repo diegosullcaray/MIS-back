@@ -24,8 +24,13 @@ public class Seccion {
     @Column(nullable = false)
     private String slug;
 
+    /** Ícono del grupo en el sidebar (v2.2). */
     @Column(nullable = false)
-    private short orden = 0;
+    private String icono = "pi pi-folder";
+
+    /** Posición 1-based dentro del sistema; única por padre (v2.1). */
+    @Column(nullable = false)
+    private short orden = 1;
 
     @OneToMany(mappedBy = "seccion", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orden ASC")
@@ -38,6 +43,8 @@ public class Seccion {
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getSlug() { return slug; }
     public void setSlug(String slug) { this.slug = slug; }
+    public String getIcono() { return icono; }
+    public void setIcono(String icono) { this.icono = icono; }
     public short getOrden() { return orden; }
     public void setOrden(short orden) { this.orden = orden; }
     public List<Subseccion> getSubsecciones() { return subsecciones; }

@@ -24,8 +24,9 @@ public class Subseccion {
     @Column(nullable = false)
     private String slug;
 
+    /** Posición 1-based dentro de la sección; única por padre (v2.1). */
     @Column(nullable = false)
-    private short orden = 0;
+    private short orden = 1;
 
     @OneToMany(mappedBy = "subseccion", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orden ASC")

@@ -1,6 +1,6 @@
 # 02 — UI/UX App Flow (Frontend y Componentes)
 > **Proyecto:** MIS - Management Information System  
-> **Documentación Activa:** [01_PRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/01_PRD.md) | [02_UI_UX_APP_FLOW](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/02_UI_UX_APP_FLOW.md) | [03_TRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/03_TRD.md) | [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT_GUIDE](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [08_GUIA_SISTEMAS_HIJOS](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/08_GUIA_SISTEMAS_HIJOS.md)  
+> **Documentación Activa:** [01_PRD](01_PRD.md) | [02_UI_UX_APP_FLOW](02_UI_UX_APP_FLOW.md) | [03_TRD](03_TRD.md) | [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](05_IMPLEMENTATION_PLAN.md) | [06_FIGMA_UX_KIT_GUIDE](FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [08_GUIA_SISTEMAS_HIJOS](08_GUIA_SISTEMAS_HIJOS.md)  
 > **Versión:** 1.5.0  
 > **Fecha:** 2026-07-12  
 > **Estado:** 🟢 Aprobado — alineado a la implementación

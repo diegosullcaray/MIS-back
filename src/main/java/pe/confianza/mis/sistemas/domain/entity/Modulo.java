@@ -22,11 +22,16 @@ public class Modulo {
     @Column(nullable = false)
     private String slug;
 
+    /** Ícono del ítem navegable en el sidebar (v2.2). */
+    @Column(nullable = false)
+    private String icono = "pi pi-file";
+
     @Column(nullable = false)
     private boolean activo = true;
 
+    /** Posición 1-based dentro de la subsección; única por padre (v2.1). */
     @Column(nullable = false)
-    private short orden = 0;
+    private short orden = 1;
 
     public UUID getId() { return id; }
     public Subseccion getSubseccion() { return subseccion; }
@@ -35,6 +40,8 @@ public class Modulo {
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getSlug() { return slug; }
     public void setSlug(String slug) { this.slug = slug; }
+    public String getIcono() { return icono; }
+    public void setIcono(String icono) { this.icono = icono; }
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
     public short getOrden() { return orden; }

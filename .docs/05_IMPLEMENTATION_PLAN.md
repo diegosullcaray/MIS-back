@@ -1,6 +1,6 @@
 # 05 — Implementation Plan (Ruta Crítica)
 > **Proyecto:** MIS - Management Information System  
-> **Documentación Activa:** [01_PRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/01_PRD.md) | [02_UI_UX_APP_FLOW](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/02_UI_UX_APP_FLOW.md) | [03_TRD](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/03_TRD.md) | [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) | [06_FIGMA_UX_KIT_GUIDE](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [07_DATABASE_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/07_DATABASE_SCHEMA.sql) | [08_GUIA_SISTEMAS_HIJOS](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/08_GUIA_SISTEMAS_HIJOS.md)  
+> **Documentación Activa:** [01_PRD](01_PRD.md) | [02_UI_UX_APP_FLOW](02_UI_UX_APP_FLOW.md) | [03_TRD](03_TRD.md) | [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md) | [06_FIGMA_UX_KIT_GUIDE](FIGMA/06_FIGMA_UX_KIT_GUIDE.md) | [07_DATABASE_SCHEMA](Backend/07_DATABASE_SCHEMA_v2.2.sql) | [08_GUIA_SISTEMAS_HIJOS](08_GUIA_SISTEMAS_HIJOS.md)  
 > **Versión:** 2.0.0  
 > **Fecha:** 2026-07-12  
 > **Estado:** 🟢 Fases 0–5 completadas (frontend con Fake API) · Fases 6–8 pendientes
@@ -132,7 +132,7 @@ construcción del backend Spring Boot (FASE 7) y el primer sistema hijo real (FA
 
 ## 🔧 FASE 7 — Backend Real: Spring Boot + PostgreSQL (EN CURSO — API implementada)
 
-> Especificación completa en [04_BACKEND_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/04_BACKEND_SCHEMA.md) y DDL en [07_DATABASE_SCHEMA](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/Backend/07_DATABASE_SCHEMA.sql).
+> Especificación completa en [04_BACKEND_SCHEMA](Backend/04_BACKEND_SCHEMA.md) y DDL en [07_DATABASE_SCHEMA_v2.2](Backend/07_DATABASE_SCHEMA_v2.2.sql).
 
 - [x] **F7-01** · Scaffold `mis-backend` (Java 21, Spring Boot 4.1, módulos `core/auth/usuarios/roles/sistemas` — reglas BE-01..BE-08)
 - [x] **F7-02** · Flyway `V1__baseline.sql` = doc 07 (esquemas iam/sistemas/auth/auditoria, RLS, roles de BD)
@@ -145,7 +145,7 @@ construcción del backend Spring Boot (FASE 7) y el primer sistema hijo real (FA
 
 ## ⏳ FASE 8 — Primer Sistema Hijo (PENDIENTE — guía lista)
 
-> Guía completa en [08_GUIA_SISTEMAS_HIJOS](file:///f:/FINACIERA%20CONFIANZA/DESARROLLO/mis-host/docs_proyecto/08_GUIA_SISTEMAS_HIJOS.md) (ejemplo: `mis-remote-reportes`, puertos 4205/8085).
+> Guía completa en [08_GUIA_SISTEMAS_HIJOS](08_GUIA_SISTEMAS_HIJOS.md) (ejemplo: `mis-remote-reportes`, puertos 4205/8085).
 
 - [ ] **F8-01** · Repo `mis-remote-reportes` (frontend Remote NF + backend Spring Boot propio + BD propia)
 - [ ] **F8-02** · Frontend expone `./Component`; tema `MisTheme`; lee signals readonly del shell

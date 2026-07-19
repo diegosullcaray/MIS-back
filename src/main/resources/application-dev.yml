@@ -1,9 +1,9 @@
 # ── Perfil DEV: auth por email + contraseña + OTP fijo ──────────────────────
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/DESA_MIS}
-    username: ${SPRING_DATASOURCE_USERNAME:mis_backend}
-    password: ${SPRING_DATASOURCE_PASSWORD:MisBackend.Dev2026}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dbmis}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:diegosr.124}
   jpa:
     show-sql: false
 

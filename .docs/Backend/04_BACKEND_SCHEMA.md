@@ -1,8 +1,8 @@
 # 04 — Backend Schema (Spring Boot — API, Arquitectura y Datos)
 > **Proyecto:** MIS - Management Information System
-> **Documentación Activa:** [01_PRD](../01_PRD.md) | [02_UI_UX_APP_FLOW](../02_UI_UX_APP_FLOW.md) | [03_TRD](../03_TRD.md) | [04_BACKEND_SCHEMA](04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](../05_IMPLEMENTATION_PLAN.md) | [07_DATABASE_SCHEMA](07_DATABASE_SCHEMA.sql)
-> **Versión:** 3.0.0
-> **Fecha:** 2026-07-13
+> **Documentación Activa:** [01_PRD](../01_PRD.md) | [02_UI_UX_APP_FLOW](../02_UI_UX_APP_FLOW.md) | [03_TRD](../03_TRD.md) | [04_BACKEND_SCHEMA](04_BACKEND_SCHEMA.md) | [05_IMPLEMENTATION_PLAN](../05_IMPLEMENTATION_PLAN.md) | [07_DATABASE_SCHEMA](07_DATABASE_SCHEMA_v2.2.sql)
+> **Versión:** 3.1.0 (alineado al esquema de BD v2.2)
+> **Fecha:** 2026-07-18
 > **Estado:** 🟢 Alineado al frontend actual (la Fake API implementa este contrato) y a la estructura real del código (`src/main/java/pe/confianza/mis/`)
 
 ---
@@ -15,7 +15,7 @@
 | Framework | **Spring Boot** | 4.1 | starters: webmvc, validation, actuator, flyway |
 | Seguridad | Spring Security | 7.x | JWT stateless + MFA OTP (CA-07) |
 | Persistencia | Spring Data JPA (Hibernate) | — | Un repositorio por agregado |
-| Base de datos | **PostgreSQL** | 16+ | DDL en [07_DATABASE_SCHEMA.sql](07_DATABASE_SCHEMA.sql) |
+| Base de datos | **PostgreSQL** | 16+ | DDL en [07_DATABASE_SCHEMA_v2.2.sql](07_DATABASE_SCHEMA_v2.2.sql) |
 | Migraciones | Flyway | — | `V1__baseline.sql` (= script 07) · `V2__security_hardening` · `V3__seed_dev` |
 | Mapeo DTO | MapStruct | 1.6.3 | Entity → DTO en compile-time (`presentation/mapper/`, processor en el pom) |
 | Documentación | springdoc-openapi | 3.0 | Swagger UI solo en perfil `dev` |
@@ -123,14 +123,19 @@ mis-backend/
 │       ├── presentation/
 │       │   ├── controller/  SistemaController
 │       │   ├── dto/         SistemaDtos: SistemaDto/Resumen/Request, Seccion/Subseccion/
-│       │   │                Modulo (Dto + Input), PermisoRolSistemaDto, GuardarPermisos
+│       │   │                Modulo (Dto + Input, con `icono` en sección y módulo),
+│       │   │                PermisoRolSistemaDto y GuardarPermisosRequest (v2.2:
+│       │   │                secciones + subsecciones + modulos)
 │       │   └── mapper/      SistemaMapper (MapStruct: árbol completo → DTO)
 │       ├── application/
 │       │   ├── service/     SistemaService · puerto: SistemaLookup
 │       │   └── impl/        SistemaServiceImpl
 │       ├── domain/
-│       │   ├── entity/      Sistema, Seccion, Subseccion, Modulo, PermisoRolModulo
-│       │   └── repository/  SistemaRepository, ModuloRepository, PermisoRolModuloRepository
+│       │   ├── entity/      Sistema, Seccion, Subseccion, Modulo,
+│       │   │                PermisoRolSeccion, PermisoRolSubseccion, PermisoRolModulo
+│       │   └── repository/  SistemaRepository, SeccionRepository, SubseccionRepository,
+│       │                    ModuloRepository, PermisoRolSeccionRepository,
+│       │                    PermisoRolSubseccionRepository, PermisoRolModuloRepository
 │       └── infrastructure/  (reservado)
 │
 ├── src/main/resources/
@@ -232,34 +237,37 @@ Los módulos se hablan **solo** por interfaces publicadas en `application/servic
 | `POST /api/v1/sistemas` | admin-sistema | Registra un Remote. `409` slug duplicado. |
 | `PUT /api/v1/sistemas/{id}` | admin-sistema | Actualiza datos generales (la estructura tiene su propio endpoint). |
 | `DELETE /api/v1/sistemas/{id}` | admin-sistema | `409` si está asignado a algún rol. Cascada sobre estructura y permisos. |
-| `PUT /api/v1/sistemas/{id}/estructura` | admin-sistema | Reemplaza el árbol completo (`Seccion[]`) y depura permisos huérfanos en la misma transacción (BE-07). |
-| `GET /api/v1/sistemas/{id}/permisos` | admin-sistema | `PermisoRolSistema[]` del sistema. |
-| `PUT /api/v1/sistemas/{id}/permisos/{rolId}` | admin-sistema | Body `{ modulos: string[] }`. Upsert de los permisos del rol en el sistema. |
+| `PUT /api/v1/sistemas/{id}/estructura` | admin-sistema | Reemplaza el árbol completo (`Seccion[]`, con `icono` opcional por sección/módulo; el `orden` 1-based lo define la posición en el arreglo) y depura permisos huérfanos de los 3 niveles en la misma transacción (BE-07). |
+| `GET /api/v1/sistemas/{id}/permisos` | admin-sistema | `PermisoRolSistema[]` del sistema (ids concedidos por nivel: `secciones`, `subsecciones`, `modulos`). |
+| `PUT /api/v1/sistemas/{id}/permisos/{rolId}` | admin-sistema | Body `{ secciones: string[], subsecciones: string[], modulos: string[] }` (v2.2). Upsert de los permisos del rol en el sistema **por nivel**, con herencia descendente: conceder un nivel habilita todo lo que cuelga de él. El nivel SISTEMA se administra con el campo `subsistemas` del rol (`iam.rol_sistema`). |
 
 ### 4.5 DTOs de referencia
 
 Los DTOs Java replican los modelos del frontend (fuente de verdad del contrato):
 `Usuario`, `UsuarioRequest`, `Rol`, `RolRequest`, `PageResponse<T>` (en
-`acceso.model.ts`) y `Sistema`, `SistemaResumen`, `SistemaRequest`, `Seccion`,
-`Subseccion`, `Modulo`, `PermisoRolSistema` (en `sistema.model.ts`).
+`acceso.model.ts`) y `Sistema`, `SistemaResumen`, `SistemaRequest`, `Seccion`
+(con `icono`), `Subseccion`, `Modulo` (con `icono`), `PermisoRolSistema`
+(v2.2: `secciones` + `subsecciones` + `modulos`) (en `sistema.model.ts`).
 Fechas siempre **ISO-8601 UTC** (`Instant` + Jackson).
 
 ---
 
-## 5. Modelo de Datos (v2.0)
+## 5. Modelo de Datos (v2.2)
 
-El DDL completo (PostgreSQL 16) vive en **[07_DATABASE_SCHEMA.sql](07_DATABASE_SCHEMA.sql)** — es también la migración baseline de Flyway. La BD se organiza en **4 esquemas** que espejan los módulos del backend (§2): `iam`, `sistemas`, `auth` y `auditoria` — cada esquema es la costura natural si un módulo se extrae a microservicio.
+El DDL completo (PostgreSQL 16) vive en **[07_DATABASE_SCHEMA_v2.2.sql](07_DATABASE_SCHEMA_v2.2.sql)** — es también la migración baseline de Flyway. La BD se organiza en **4 esquemas** que espejan los módulos del backend (§2): `iam`, `sistemas`, `auth` y `auditoria` — cada esquema es la costura natural si un módulo se extrae a microservicio.
 
 ```
-┌── iam ─────────────────────────┐   ┌── sistemas ───────────────────────────┐
-│ roles ────< usuarios           │   │ sistemas ─< secciones ─< subsecciones │
-│   │            │ 1:1           │   │                              │        │
-│   │            └─ credenciales │   │                           modulos     │
-│   ├─(rol_sistema)──────────────┼───►  ▲                            ▲       │
-│   │  usuarios                  │   │  │                            │       │
-│   │    └─(usuario_sistema)─────┼───┼──┘                            │       │
-│   └─(permiso_rol_modulo)───────┼───┼───────────────────────────────┘       │
-└────────────────────────────────┘   └────────────────────────────────────────┘
+┌── iam ──────────────────────────────┐   ┌── sistemas ───────────────────────────┐
+│ roles ────< usuarios                │   │ sistemas ─< secciones ─< subsecciones │
+│   │            │ 1:1                │   │    ▲           ▲             │        │
+│   │            └─ credenciales      │   │    │           │          modulos     │
+│   ├─(rol_sistema)───────────────────┼───┼────┘           │             ▲        │
+│   │  usuarios                       │   │                │             │        │
+│   │    └─(usuario_sistema)──────────┼───┼─► sistemas     │             │        │
+│   ├─(permiso_rol_seccion)───────────┼───┼────────────────┘             │        │
+│   ├─(permiso_rol_subseccion)────────┼───┼─► subsecciones               │        │
+│   └─(permiso_rol_modulo)────────────┼───┼──────────────────────────────┘        │
+└─────────────────────────────────────┘   └────────────────────────────────────────┘
 ┌── auth ────────────────────────┐   ┌── auditoria (append-only, RLS) ───────┐
 │ otp_desafios · sesiones (jti)  │   │ eventos (particionada/mes) · accesos  │
 └────────────────────────────────┘   └────────────────────────────────────────┘
@@ -271,13 +279,22 @@ El DDL completo (PostgreSQL 16) vive en **[07_DATABASE_SCHEMA.sql](07_DATABASE_S
 | `iam.usuarios` | Perfil de la cuenta (email `citext` único, FK a rol, flag `activo`). **Sin secretos.** |
 | `iam.credenciales` | 1:1 con usuario: `password_hash`, lockout (`intentos_fallidos`, `bloqueada_hasta`), rotación. |
 | `sistemas.sistemas` | Remotes registrados (slug = nombre en `federation.manifest.json`, estado como ENUM). |
-| `sistemas.secciones/subsecciones/modulos` | Árbol jerárquico (cascada al eliminar, orden explícito). |
-| `iam.rol_sistema` / `iam.usuario_sistema` | Subsistemas habilitados por rol / override por usuario. |
-| `iam.permiso_rol_modulo` | Permisos a nivel de módulo; `PermisoRolSistema` se deriva agrupando por sistema. |
+| `sistemas.secciones/subsecciones/modulos` | Árbol jerárquico (cascada al eliminar). v2.1: `orden` obligatorio (≥ 1) y **único por padre** (DEFERRABLE para renumerar en una transacción); v2.2: `icono` en secciones (`pi pi-folder`) y módulos (`pi pi-file`). |
+| `iam.rol_sistema` / `iam.usuario_sistema` | Subsistemas habilitados por rol (= permiso a nivel SISTEMA) / override por usuario. |
+| `iam.permiso_rol_seccion` / `iam.permiso_rol_subseccion` / `iam.permiso_rol_modulo` | **Permisos por nivel (v2.2)** con herencia descendente: conceder un nivel habilita todo lo que cuelga de él. Una tabla por nivel (FK real ⇒ integridad + depuración por CASCADE al reestructurar). |
 | `auth.otp_desafios` | Desafíos MFA: hash del código, TTL 3 min, máx. 5 intentos, un solo uso. |
 | `auth.sesiones` | JWTs emitidos (claim `jti`) → revocación inmediata sin esperar expiración. |
 | `auditoria.eventos` | Trail de cambios (JSONB antes/después, actor, trace_id), **particionada por mes**, índices BRIN. |
 | `auditoria.accesos` | Bitácora de seguridad: logins, OTP, denegaciones, revocaciones (con IP y user-agent). |
+
+**Vistas de apoyo** (contrato de lectura del backend):
+
+| Vista | Propósito |
+|---|---|
+| `sistemas.v_sistemas_resumen` | `GET /sistemas` (contadores agregados en un solo escaneo). |
+| `sistemas.v_sidebar` (v2.1) | Árbol plano **ya ordenado** con la ruta canónica `/{sistema}/{seccion}/{subseccion}/{modulo}` — el contrato que consumen los sidebars de los Remotes. |
+| `iam.v_permisos_efectivos` (v2.2) | Resuelve la herencia de los 4 niveles a su expresión final `(rol, módulo)`; el backend consulta **una sola fuente de verdad**. |
+| `iam.v_usuarios` | Usuario "público" (sin credenciales). |
 
 ### 5.1 Patrón de seguridad de la BD
 

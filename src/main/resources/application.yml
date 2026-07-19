@@ -15,6 +15,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    # baseline en la versión 0 (virtual, anterior a V1): si falta el historial de
+    # Flyway se crea sin saltar V1 — así una BD vacía corre V1→V2→V3 completo.
+    baseline-version: 0
     locations: classpath:db/migration
 
 mis:

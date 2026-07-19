@@ -1,5 +1,6 @@
 package pe.confianza.mis.sistemas.application.service;
 
+import pe.confianza.mis.sistemas.presentation.dto.SistemaDtos.GuardarPermisosRequest;
 import pe.confianza.mis.sistemas.presentation.dto.SistemaDtos.PermisoRolSistemaDto;
 import pe.confianza.mis.sistemas.presentation.dto.SistemaDtos.SeccionInput;
 import pe.confianza.mis.sistemas.presentation.dto.SistemaDtos.SistemaDto;
@@ -22,5 +23,11 @@ public interface SistemaService {
     SistemaDto reemplazarEstructura(UUID id, List<SeccionInput> entrada);
     List<PermisoRolSistemaDto> permisosDeSistema(UUID sistemaId);
     List<PermisoRolSistemaDto> permisosDeRol(UUID rolId);
-    PermisoRolSistemaDto guardarPermisos(UUID sistemaId, UUID rolId, List<UUID> moduloIds);
+
+    /**
+     * Upsert de los permisos del rol en el sistema, por nivel (v2.2): secciones,
+     * subsecciones y módulos, con herencia descendente resuelta por la vista
+     * iam.v_permisos_efectivos.
+     */
+    PermisoRolSistemaDto guardarPermisos(UUID sistemaId, UUID rolId, GuardarPermisosRequest req);
 }

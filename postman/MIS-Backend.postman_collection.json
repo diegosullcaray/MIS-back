@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MIS Host · Backend",
-    "description": "Colección de endpoints REST de mis-backend (Spring Boot). Módulos: auth, usuarios, roles, sistemas.\n\nFlujo de autenticación:\n1. Ejecutar \"Auth > Login\" con email/password → devuelve mfaToken (se guarda automático en {{mfaToken}}).\n2. Ejecutar \"Auth > Verificar OTP\" (en dev el OTP fijo es 123456, configurado en application-dev.yml) → devuelve el JWT (se guarda automático en {{token}}).\n3. El resto de requests usan Bearer {{token}} automáticamente (auth heredado de la colección).",
+    "description": "Colección completa de endpoints REST de mis-backend (Spring Boot). Módulos: auth, usuarios, roles, sistemas.\n\n── Niveles de acceso (SecurityConfig) ──\n- [Público]: sin token (auth + actuator health/info).\n- [Colaborador]: cualquier usuario autenticado (admin-sistema, admin-general o supervisor-area). Son las lecturas que alimentan el sidebar/dashboard de cada colaborador.\n- [Admin]: solo rol ADMIN_SISTEMA (gestión de IAM y de sistemas).\n\n── Flujo de autenticación ──\n1. 'Auth > Login' con email/password → devuelve mfaToken (se guarda en {{mfaToken}}).\n2. 'Auth > Verificar OTP' (en dev el OTP fijo es 123456, ver application-dev.yml) → devuelve el JWT (se guarda en {{token}}).\n3. El resto de requests usan Bearer {{token}} automáticamente (heredado de la colección).\n\nVarias peticiones auto-capturan IDs ({{rolId}}, {{sistemaId}}, {{usuarioId}}, {{seccionId}}, {{subseccionId}}, {{moduloId}}) para poder encadenarlas sin copiar/pegar.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_postman_id": "mis-backend-collection"
   },
@@ -18,11 +18,15 @@
     { "key": "usuarioId", "value": "", "type": "string" },
     { "key": "rolId", "value": "", "type": "string" },
     { "key": "sistemaId", "value": "", "type": "string" },
-    { "key": "sistemaSlug", "value": "subsistema-contabilidad", "type": "string" }
+    { "key": "sistemaSlug", "value": "subsistema-contabilidad", "type": "string" },
+    { "key": "seccionId", "value": "", "type": "string" },
+    { "key": "subseccionId", "value": "", "type": "string" },
+    { "key": "moduloId", "value": "", "type": "string" }
   ],
   "item": [
     {
-      "name": "Auth",
+      "name": "Auth [Público]",
+      "description": "Autenticación con MFA obligatorio (CA-07). Sin token.",
       "item": [
         {
           "name": "Login (paso 1: credenciales)",
@@ -39,7 +43,7 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "auth", "login" ]
             },
-            "description": "password = contraseña en dev, o ID token de Google en prod. Responde MfaChallengeResponse { mfaRequerido, mfaToken, email }.\n\nUsuarios semilla de dev (V3__seed_dev.sql):\n- admin@confianza.pe / admin123 (admin-sistema)\n- general@confianza.pe / general123 (admin-general)\n- supervisor@confianza.pe / supervisor123 (supervisor-area)"
+            "description": "password = contraseña en dev, o ID token de Google en prod. Responde MfaChallengeResponse { mfaRequerido, mfaToken, email }. NO emite sesión todavía.\n\nUsuarios semilla de dev (V3__seed_dev.sql):\n- admin@confianza.pe / admin123 (admin-sistema)\n- general@confianza.pe / general123 (admin-general)\n- supervisor@confianza.pe / supervisor123 (supervisor-area)\n\nErrores: 401 credenciales inválidas · 403 usuario desactivado."
           },
           "event": [
             {
@@ -72,7 +76,7 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "auth", "verificar-otp" ]
             },
-            "description": "En dev el OTP fijo es 123456 (mis.auth.otp.fixed-code en application-dev.yml). Responde LoginResponse { token, usuario }."
+            "description": "En dev el OTP fijo es 123456 (mis.auth.otp.fixed-code). Máx. 5 intentos, un solo uso, TTL 3 min. Responde LoginResponse { token, usuario }.\n\nErrores: 401 OTP incorrecto o desafío expirado."
           },
           "event": [
             {
@@ -94,8 +98,120 @@
       ]
     },
     {
-      "name": "Usuarios",
-      "description": "Todos requieren rol ADMIN_SISTEMA (Bearer {{token}}).",
+      "name": "Colaborador [Autenticado]",
+      "description": "Lecturas que puede hacer CUALQUIER usuario autenticado (admin-sistema, admin-general o supervisor-area). Alimentan el sidebar y el dashboard del colaborador. Requieren Bearer {{token}}.",
+      "item": [
+        {
+          "name": "Listar sistemas (resumen)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas" ]
+            },
+            "description": "SistemaResumen[] (contadores agregados, sin árbol). Alimenta sidebar y dashboard."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const arr = pm.response.json();",
+                  "    if (Array.isArray(arr) && arr.length) {",
+                  "        pm.collectionVariables.set('sistemaId', arr[0].id);",
+                  "        if (arr[0].slug) pm.collectionVariables.set('sistemaSlug', arr[0].slug);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Obtener sistema por ID o slug (árbol completo)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaSlug}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "sistemas", "{{sistemaSlug}}" ]
+            },
+            "description": "{{sistemaSlug}} puede ser el UUID o el slug. Responde el árbol completo Secciones → Subsecciones → Módulos (con icono por sección y módulo, v2.2)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const s = pm.response.json();",
+                  "    const sec = (s.secciones || [])[0];",
+                  "    if (sec) {",
+                  "        pm.collectionVariables.set('seccionId', sec.id);",
+                  "        const sub = (sec.subsecciones || [])[0];",
+                  "        if (sub) {",
+                  "            pm.collectionVariables.set('subseccionId', sub.id);",
+                  "            const mod = (sub.modulos || [])[0];",
+                  "            if (mod) pm.collectionVariables.set('moduloId', mod.id);",
+                  "        }",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Listar roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles" ]
+            },
+            "description": "Lista de roles (la consumen los selects del Host)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const arr = pm.response.json();",
+                  "    if (Array.isArray(arr) && arr.length) pm.collectionVariables.set('rolId', arr[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Obtener rol por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "v1", "roles", "{{rolId}}" ]
+            },
+            "description": "Detalle del rol (RolDto: id, nombre, slug, subsistemas)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Administración · Usuarios [Admin]",
+      "description": "Gestión de usuarios. Toda la clase exige rol ADMIN_SISTEMA (Bearer {{token}}).",
       "item": [
         {
           "name": "Listar usuarios (paginado)",
@@ -111,8 +227,23 @@
                 { "key": "q", "value": "", "description": "búsqueda por nombre/email (opcional)" },
                 { "key": "activo", "value": "", "description": "true|false (opcional)" }
               ]
-            }
+            },
+            "description": "PageResponse<UsuarioDto> { page, pageSize, total, items }."
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.items && body.items.length) pm.collectionVariables.set('usuarioId', body.items[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -123,7 +254,8 @@
               "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "usuarios", "{{usuarioId}}" ]
-            }
+            },
+            "description": "Detalle. 404 si no existe."
           },
           "response": []
         },
@@ -134,14 +266,29 @@
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": \"Password.123\",\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"credito\", \"cobranza\"]\n}"
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": \"Password.123\",\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"subsistema-contabilidad\", \"subsistema-rrhh\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/usuarios",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "usuarios" ]
-            }
+            },
+            "description": "subsistemas = slugs de sistemas (override individual del rol). Errores: 400 campos requeridos · 409 email duplicado."
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.id) pm.collectionVariables.set('usuarioId', body.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -151,14 +298,14 @@
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": null,\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"credito\"]\n}"
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan.perez@confianza.pe\",\n  \"password\": null,\n  \"rolId\": \"{{rolId}}\",\n  \"subsistemas\": [\"subsistema-contabilidad\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "usuarios", "{{usuarioId}}" ]
             },
-            "description": "password es opcional en edición (enviar null para no cambiarla)."
+            "description": "Actualiza nombre/email/rol/subsistemas. password es opcional (enviar null para no cambiarla)."
           },
           "response": []
         },
@@ -175,39 +322,17 @@
               "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}/estado",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "usuarios", "{{usuarioId}}", "estado" ]
-            }
+            },
+            "description": "Body { activo: boolean }. Activa/desactiva la cuenta."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Roles",
+      "name": "Administración · Roles [Admin]",
+      "description": "Gestión de roles. GET listar/obtener están en la carpeta Colaborador (autenticados); estos endpoints exigen rol ADMIN_SISTEMA.",
       "item": [
-        {
-          "name": "Listar roles",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/roles",
-              "host": [ "{{baseUrl}}" ],
-              "path": [ "api", "v1", "roles" ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener rol por ID",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
-              "host": [ "{{baseUrl}}" ],
-              "path": [ "api", "v1", "roles", "{{rolId}}" ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "Usuarios del rol",
           "request": {
@@ -217,12 +342,12 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "roles", "{{rolId}}", "usuarios" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA."
+            "description": "UsuarioDto[] vinculados al rol."
           },
           "response": []
         },
         {
-          "name": "Permisos del rol",
+          "name": "Permisos del rol (agrupados por sistema)",
           "request": {
             "method": "GET",
             "url": {
@@ -230,7 +355,7 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "roles", "{{rolId}}", "permisos" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA."
+            "description": "PermisoRolSistema[] del rol. Cada item: { rolId, sistemaId, secciones[], subsecciones[], modulos[] } (v2.2)."
           },
           "response": []
         },
@@ -241,15 +366,29 @@
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Analista de Crédito\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"credito\"]\n}"
+              "raw": "{\n  \"nombre\": \"Analista de Crédito\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"subsistema-contabilidad\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/roles",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "roles" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. slug debe ser kebab-case en minúsculas."
+            "description": "slug debe ser kebab-case en minúsculas. subsistemas = slugs habilitados por el rol. Errores: 400 nombre/slug requeridos · 409 slug duplicado."
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.id) pm.collectionVariables.set('rolId', body.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -259,14 +398,14 @@
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Analista de Crédito Senior\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"credito\", \"cobranza\"]\n}"
+              "raw": "{\n  \"nombre\": \"Analista de Crédito Senior\",\n  \"slug\": \"analista-credito\",\n  \"subsistemas\": [\"subsistema-contabilidad\", \"subsistema-rrhh\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/roles/{{rolId}}",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "roles", "{{rolId}}" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA."
+            "description": "El slug es inmutable tras la creación (se ignora si cambia)."
           },
           "response": []
         },
@@ -279,41 +418,16 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "roles", "{{rolId}}" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. Responde 204 No Content."
+            "description": "Responde 204 No Content. 409 si el rol tiene usuarios asignados."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Sistemas",
+      "name": "Administración · Sistemas [Admin]",
+      "description": "Registro de Remotes, estructura y permisos por nivel. GET listar/obtener están en la carpeta Colaborador; estos endpoints exigen rol ADMIN_SISTEMA.",
       "item": [
-        {
-          "name": "Listar sistemas (resumen)",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/sistemas",
-              "host": [ "{{baseUrl}}" ],
-              "path": [ "api", "v1", "sistemas" ]
-            },
-            "description": "Usado por sidebar/dashboard del frontend."
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener sistema por ID o slug",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaSlug}}",
-              "host": [ "{{baseUrl}}" ],
-              "path": [ "api", "v1", "sistemas", "{{sistemaSlug}}" ]
-            },
-            "description": "{{sistemaSlug}} puede ser el UUID o el slug del sistema. Responde el árbol completo (secciones/subsecciones/módulos)."
-          },
-          "response": []
-        },
         {
           "name": "Crear sistema",
           "request": {
@@ -321,32 +435,47 @@
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"credito\",\n  \"descripcion\": \"Gestión de créditos\",\n  \"icono\": \"credit-card\",\n  \"url\": \"https://credito.confianza.pe\",\n  \"version\": \"1.0.0\",\n  \"estado\": \"activo\"\n}"
+              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"subsistema-creditos\",\n  \"descripcion\": \"Gestión de créditos\",\n  \"icono\": \"pi pi-credit-card\",\n  \"url\": \"http://localhost:4205/remoteEntry.json\",\n  \"version\": \"1.0.0\",\n  \"estado\": \"inactivo\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/sistemas",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. slug debe ser kebab-case en minúsculas."
+            "description": "slug = nombre del Remote en federation.manifest.json (kebab-case). estado ∈ activo|mantenimiento|inactivo. Error: 409 slug duplicado."
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.id) pm.collectionVariables.set('sistemaId', body.id);",
+                  "    if (body.slug) pm.collectionVariables.set('sistemaSlug', body.slug);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
-          "name": "Actualizar sistema",
+          "name": "Actualizar sistema (datos generales)",
           "request": {
             "method": "PUT",
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"credito\",\n  \"descripcion\": \"Gestión integral de créditos\",\n  \"icono\": \"credit-card\",\n  \"url\": \"https://credito.confianza.pe\",\n  \"version\": \"1.1.0\",\n  \"estado\": \"activo\"\n}"
+              "raw": "{\n  \"nombre\": \"Créditos\",\n  \"slug\": \"subsistema-creditos\",\n  \"descripcion\": \"Gestión integral de créditos\",\n  \"icono\": \"pi pi-credit-card\",\n  \"url\": \"http://localhost:4205/remoteEntry.json\",\n  \"version\": \"1.1.0\",\n  \"estado\": \"activo\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas", "{{sistemaId}}" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. El path param aquí es UUID (no admite slug)."
+            "description": "Actualiza datos generales (la estructura tiene su propio endpoint). El path param es UUID (no admite slug)."
           },
           "response": []
         },
@@ -359,25 +488,25 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas", "{{sistemaId}}" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. Responde 204 No Content."
+            "description": "Responde 204 No Content. 409 si está asignado a algún rol. Cascada sobre estructura y permisos."
           },
           "response": []
         },
         {
-          "name": "Reemplazar estructura (secciones/módulos)",
+          "name": "Reemplazar estructura (secciones/subsecciones/módulos)",
           "request": {
             "method": "PUT",
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"nombre\": \"Operaciones\",\n    \"slug\": \"operaciones\",\n    \"subsecciones\": [\n      {\n        \"nombre\": \"Solicitudes\",\n        \"slug\": \"solicitudes\",\n        \"modulos\": [\n          { \"nombre\": \"Nueva solicitud\", \"slug\": \"nueva-solicitud\", \"activo\": true },\n          { \"nombre\": \"Bandeja\", \"slug\": \"bandeja\", \"activo\": true }\n        ]\n      }\n    ]\n  }\n]"
+              "raw": "[\n  {\n    \"nombre\": \"Operaciones\",\n    \"slug\": \"operaciones\",\n    \"icono\": \"pi pi-folder\",\n    \"subsecciones\": [\n      {\n        \"nombre\": \"Solicitudes\",\n        \"slug\": \"solicitudes\",\n        \"modulos\": [\n          { \"nombre\": \"Nueva solicitud\", \"slug\": \"nueva-solicitud\", \"icono\": \"pi pi-file\", \"activo\": true },\n          { \"nombre\": \"Bandeja\", \"slug\": \"bandeja\", \"icono\": \"pi pi-inbox\", \"activo\": true }\n        ]\n      }\n    ]\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}/estructura",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "estructura" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. Reemplaza el árbol completo de secciones > subsecciones > módulos del sistema."
+            "description": "Reemplaza el árbol completo Secciones → Subsecciones → Módulos. El 'orden' (1-based, v2.1) lo define la posición en el arreglo; 'icono' es opcional por sección/módulo. Depura permisos huérfanos de los 3 niveles en la misma transacción (BE-07)."
           },
           "response": []
         },
@@ -390,25 +519,59 @@
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "permisos" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA."
+            "description": "PermisoRolSistema[] del sistema: por rol, los ids concedidos por nivel { secciones[], subsecciones[], modulos[] } (v2.2)."
           },
           "response": []
         },
         {
-          "name": "Guardar permisos de un rol en el sistema",
+          "name": "Guardar permisos de un rol en el sistema (por nivel)",
           "request": {
             "method": "PUT",
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"modulos\": [\n    \"00000000-0000-0000-0000-000000000001\",\n    \"00000000-0000-0000-0000-000000000002\"\n  ]\n}"
+              "raw": "{\n  \"secciones\": [\"{{seccionId}}\"],\n  \"subsecciones\": [],\n  \"modulos\": [\"{{moduloId}}\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/sistemas/{{sistemaId}}/permisos/{{rolId}}",
               "host": [ "{{baseUrl}}" ],
               "path": [ "api", "v1", "sistemas", "{{sistemaId}}", "permisos", "{{rolId}}" ]
             },
-            "description": "Requiere rol ADMIN_SISTEMA. Upsert de los módulos permitidos para {{rolId}} en {{sistemaId}}."
+            "description": "Upsert de permisos del rol en el sistema POR NIVEL (v2.2), con herencia descendente: conceder un nivel habilita todo lo que cuelga de él. El nivel SISTEMA se administra con el campo 'subsistemas' del rol. Ejecutar antes 'Colaborador > Obtener sistema por ID o slug' para poblar {{seccionId}}/{{moduloId}}."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Utilidad · Actuator [Público]",
+      "description": "Endpoints de salud expuestos sin autenticación (management.endpoints).",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actuator", "health" ]
+            },
+            "description": "Estado de la app (liveness/readiness)."
+          },
+          "response": []
+        },
+        {
+          "name": "Info",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actuator/info",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actuator", "info" ]
+            },
+            "description": "Metadatos de build/app."
           },
           "response": []
         }
